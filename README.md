@@ -1,4 +1,4 @@
-# Group Name: MinusOne
+# MinusOne
 the main branch of this repo is currently being used for testing branch.
 ## Group Members: 
 ### Arun Persaud - 816019788
