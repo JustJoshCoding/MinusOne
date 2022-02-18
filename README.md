@@ -1,6 +1,10 @@
 # To install
 ```
-yarn install or npm install
+yarn install 
+```
+## OR
+```
+npm install
 ```
 # To Run 
 ```
