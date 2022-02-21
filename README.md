@@ -1,9 +1,13 @@
-# MinusOne
-## Install dependencies 
+# To install
 ```
-yarn install
+yarn install 
 ```
-## How to run
+## OR
+```
+npm install
+```
+# To Run 
 ```
 npm start
 ```
+
