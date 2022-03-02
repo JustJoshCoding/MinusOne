@@ -24,6 +24,7 @@ function App() {
         <Route path="/" component={Homepage} exact />
         <Route path="/groups" component={Groups} exact />
         <Route path="/ideas" component={Groups} exact />
+        <Route path="/submission" component={Groups} exact />
         
       </div>
       <Alert />
