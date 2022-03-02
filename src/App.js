@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 import Homepage from "./Pages/HomePage";
+import Groups from "./Pages/Groups";
 import "./App.css";
 import { BrowserRouter, Route } from "react-router-dom";
 import Header from "./components/Header";
@@ -21,9 +22,14 @@ function App() {
       <div className={classes.App}>
         <Header />
         <Route path="/" component={Homepage} exact />
+        <Route path="/groups" component={Groups} exact />
+        
+        
       </div>
       <Alert />
     </BrowserRouter>
+
+
   );
 }
 
