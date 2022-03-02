@@ -23,7 +23,7 @@ function App() {
         <Header />
         <Route path="/" component={Homepage} exact />
         <Route path="/groups" component={Groups} exact />
-        
+        <Route path="/ideas" component={Groups} exact />
         
       </div>
       <Alert />
