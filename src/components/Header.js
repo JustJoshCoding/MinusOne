@@ -13,12 +13,13 @@ import { useHistory } from "react-router-dom";
 import { ProManageState } from "../ProManageContext";
 import AuthModal from "./Authentication/AuthModal";
 import UserSidebar from "./Authentication/UserSidebar";
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const useStyles = makeStyles((theme) => ({
   title: {
     flex: 1,
     color: "gold",
-    fontFamily: "Montserrat",
     fontWeight: "bold",
     cursor: "pointer",
   },
@@ -27,13 +28,14 @@ const useStyles = makeStyles((theme) => ({
 const darkTheme = createTheme({
   palette: {
     primary: {
-      main: "#fff",
+      main: "#ffff",
     },
     type: "dark",
   },
 });
 
 function Header() {
+
   const classes = useStyles();
   const { user } = ProManageState();
 
@@ -44,6 +46,15 @@ function Header() {
       <AppBar color="transparent" position="static">
         <Container>
           <Toolbar>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
             <Typography
               onClick={() => history.push(`/`)}
               variant="h6"
