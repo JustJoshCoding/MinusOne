@@ -25,7 +25,7 @@ function App() {
        <div className={classes.App}>
         <Header />
         <Route path="/" component={Homepage} exact />
-        <Route path="/idea" component={IdeaPage} exact />
+        <Route path="/ideas" component={IdeaPage} exact />
         <Route path="/groups" component={Groups} exact />
         <Route path="/groupadd" component={GroupAdd} exact />
       </div>

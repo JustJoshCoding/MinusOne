@@ -2,49 +2,49 @@ import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import List from '../List';
 import Button from '@mui/material/Button';
 import AddIdea from './AddIdea';
+import { styled } from '@mui/material/styles';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { ProManageState } from '../../ProManageContext';
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 17,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
 
 const columns = [
   { id: 'name', label: 'Name', minWidth: 80 },
+  { id: 'description', label: 'Description', align: 'left', minWidth: 80 },
   { id: 'type', label: 'Type', align: 'left', minWidth: 49 },
 ];
 
-function createData(name, type) {
-  return { name, type };
-}
-
-const rows = [
-  createData(<List ideaName="Online Auditorium" ideaDescription="create the worlds largest and most exciting online auditorium"/>, 'IN'),
-  createData(<List ideaName="Online Auditorium" ideaDescription="create the worlds largest and most exciting online auditorium"/>, 'CN'),
-  createData(<List ideaName="Online Auditorium" ideaDescription="create the worlds largest and most exciting online auditorium"/>, 'IT'),
-  createData('United States', 'US'),
-  createData('Canada', 'CA'),
-  createData('Australia', 'AU'),
-  createData('Germany', 'DE'),
-  createData('Ireland', 'IE'),
-  createData('Mexico', 'MX'),
-  createData('Japan', 'JP'),
-  createData('France', 'FR'),
-  createData('United Kingdom', 'GB'),
-  createData('Russia', 'RU'),
-  createData('Nigeria', 'NG'),
-  createData('Brazil', 'LOL'),
-];
-
 export default function StickyHeadTable() {
+  const { user, availIdeas } = ProManageState();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const { user } = ProManageState();
-
+  
+  console.log("available ideas: ", availIdeas);
   
 
   const handleChangePage = (event, newPage) => {
@@ -59,24 +59,25 @@ export default function StickyHeadTable() {
   return (
     <div style={{marginLeft: 180, marginRight: 180}}>
       {user && ( <AddIdea /> )}
+      <br/>
       <Paper variant='elevation24' sx={{ width: '100%', overflow: 'hidden' }}>
         <TableContainer>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
                 {columns.map((column) => (
-                  <TableCell
+                  <StyledTableCell
                     key={column.id}
                     align={column.align}
                     style={{ minWidth: column.minWidth }}
                   >
                     {column.label}
-                  </TableCell>
+                  </StyledTableCell>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows
+              {availIdeas
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                   return (
@@ -100,7 +101,7 @@ export default function StickyHeadTable() {
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={rows.length}
+          count={availIdeas.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

@@ -15,7 +15,7 @@ const ProManageContext = ({ children }) => {
 
   const [user, setUser] = useState(null);
   const [availIdeas, setAvailIdeas] = useState([]);
-
+  console.log(availIdeas)
   // setting the user state to the user that is currently logged in
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -24,9 +24,9 @@ const ProManageContext = ({ children }) => {
     }); 
   }, []);
 
-  // saving the new ideas from the available ideas add form to the firestore database
+  // loading available ideas from the firestore database
   useEffect(() => {
-    const ideaRef = collection(db, "Available ideas");
+    const ideaRef = collection(db, "Available Ideas");
     if (user) {
       const getAvailIdeas = async  () => {
         const data = await getDocs(ideaRef);
@@ -40,7 +40,7 @@ const ProManageContext = ({ children }) => {
       getAvailIdeas()
     }
   }, [user]);
-
+  
   return (
     <ProManage.Provider
       value={{

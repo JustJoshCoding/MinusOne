@@ -6,6 +6,9 @@ import { Button } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
+import { db } from '../../firebase';
+import { addDoc, collection } from "firebase/firestore";
+import { ProManageState } from '../../ProManageContext';
 
 const useStyles = makeStyles((theme) => ({
   root:{
@@ -24,8 +27,9 @@ const useStyles = makeStyles((theme) => ({
 
 function GroupForm() {
   const classes = useStyles();
+  const { setAlert } = ProManageState();
   const [inputField, setInputField] = useState([
-    { firstName: "", lastName: "", email: "" }
+    { fullName: "", studentID: "", email: "" }
   ]);
 
   const handleChangeInput = (index, event) =>{
@@ -34,13 +38,30 @@ function GroupForm() {
     setInputField(values);
   } 
 
-  const handleSubmit = (e) =>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("InputField", inputField)
-  }
+    const groupRef = collection(db, "Groups" );
+    try {
+    await addDoc(
+        groupRef,
+        {inputField: inputField}
+    );
+    setAlert({
+        open: true,
+        message: `${inputField.fullName} Added to the Available Ideas!`,
+        type: "success",
+    });
+    } catch (error) {
+    setAlert({
+        open: true,
+        message: error.message,
+        type: "error",
+    });
+    }
+};
  
   const handleAddFields = () => {
-    setInputField([...inputField, { firstName: '', lastName: '', email: '' }])
+    setInputField([...inputField, { fullName: '', studentID: '', email: '' }])
   }
 
   const handleRemoveFields = id => {
@@ -57,17 +78,22 @@ function GroupForm() {
         { inputField.map((inputField, index) => (
           <div key={index}>
             <TextField 
-              name='firstName'
-              label='First Name'
+              name='fullName'
+              label='Full Name'
               variant='filled'
-              value={inputField.firstName}
+              value={inputField.fullName}
               onChange={event => handleChangeInput(index, event)}
             />
             <TextField 
-              name='lastName'
-              label='Last Name'
+              name='studentID'
+              label='Student ID'
               variant='filled'
-              value={inputField.lastName}
+              value={inputField.studentID}
+              onKeyPress={(event) => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault();
+                }
+              }}
               onChange={event => handleChangeInput(index, event)}
             />  
             <TextField 

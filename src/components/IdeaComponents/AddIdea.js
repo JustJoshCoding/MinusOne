@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,6 +8,7 @@ import { db } from '../../firebase';
 import { addDoc, collection } from "firebase/firestore";
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import { FormControl, InputLabel } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
     Form: {
@@ -42,11 +43,11 @@ const useStyles = makeStyles((theme) => ({
 
 const AddIdea = () => {
     const classes = useStyles();
-    const { availIdeas, setAlert } = ProManageState();
+    const { setAlert } = ProManageState();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('');
-   
+    
     const addToAvailIdeas = async () => {
         const ideaRef = collection(db, "Available Ideas");
         try {
@@ -91,25 +92,29 @@ const AddIdea = () => {
                 />
             </div>
             <div className={classes.Select}>
-                <Select
-                    id="type"
-                    label="Type"
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
-                    >
-                    <MenuItem value="Technical Computer Science or Information Technology Projects"> 
-                        Technical Computer Science or Information Technology Projects
-                    </MenuItem>
-                    <MenuItem value="Business-Oriented Computer Science or Information Technology Projects">
-                        Business-Oriented Computer Science or Information Technology Projects
-                    </MenuItem>
-                    <MenuItem value="Research Projects">
-                        Research Projects
-                    </MenuItem>
-                    <MenuItem value="Entrepreneurial or Student-Proposed Projects">
-                        Entrepreneurial or Student-Proposed Projects
-                    </MenuItem>
-                </Select>
+                <FormControl sx={{ width: 'auto', minWidth: '20%'}}>
+                    <InputLabel id="myTypeLabel">Type</InputLabel>
+                    <Select
+                        id="type"
+                        labelId="myTypeLabel"
+                        label="Type"
+                        value={type}
+                        onChange={(e) => setType(e.target.value)}
+                        >
+                        <MenuItem value="Technical Computer Science or Information Technology Projects"> 
+                            Technical Computer Science or Information Technology Projects
+                        </MenuItem>
+                        <MenuItem value="Business-Oriented Computer Science or Information Technology Projects">
+                            Business-Oriented Computer Science or Information Technology Projects
+                        </MenuItem>
+                        <MenuItem value="Research Projects">
+                            Research Projects
+                        </MenuItem>
+                        <MenuItem value="Entrepreneurial or Student-Proposed Projects">
+                            Entrepreneurial or Student-Proposed Projects
+                        </MenuItem>
+                    </Select>
+                </FormControl>
             </div>
             <div className={classes.Btn}>
             <Button

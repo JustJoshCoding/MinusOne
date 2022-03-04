@@ -64,15 +64,6 @@ function Header() {
       <AppBar color="transparent" position="static">
         <Container>
           <Toolbar>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
             <Typography
               onClick={() => history.push(`/`)}
               variant="h6"
