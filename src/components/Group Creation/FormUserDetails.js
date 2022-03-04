@@ -24,7 +24,6 @@ export class FormUserDetails extends Component {
               onChange={handleChange('firstName')}
               defaultValue={values.firstName}
               margin="normal"
-              fullWidth
               
             />
             <br />

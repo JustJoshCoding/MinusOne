@@ -1,6 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import Homepage from "./Pages/HomePage";
 import Groups from "./Pages/Groups";
+import GroupAdd from "./Pages/GroupAdd";
 import "./App.css";
 import { BrowserRouter, Route } from "react-router-dom";
 import Header from "./components/Header";
@@ -23,9 +24,8 @@ function App() {
         <Header />
         <Route path="/" component={Homepage} exact />
         <Route path="/groups" component={Groups} exact />
-        <Route path="/ideas" component={Groups} exact />
-        <Route path="/submission" component={Groups} exact />
-        
+        <Route path="/groupadd" component={GroupAdd} exact />
+
       </div>
       <Alert />
     </BrowserRouter>

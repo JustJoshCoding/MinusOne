@@ -105,7 +105,7 @@ function Header() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="right" onClick={() => history.push(`/`)}>{page}</Typography>
+                  <Typography textAlign="right" onClick={() => history.push(`/${page}`)}>{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -115,7 +115,7 @@ function Header() {
               {pages.map((page) => (
                 <Button
                   key={page}
-                  onClick={handleCloseNavMenu}
+                  onClick={() => history.push(`/${page}`)}
                   sx={{ my: 2, color: "gold", fontFamily: "Montserrat", display: "block" }}
                 >
                   {page}
