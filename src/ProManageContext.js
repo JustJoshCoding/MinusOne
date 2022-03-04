@@ -21,7 +21,7 @@ const ProManageContext = ({ children }) => {
     onAuthStateChanged(auth, (user) => {
       if (user) setUser(user);
       else setUser(null);
-    });
+    }); 
   }, []);
 
   // saving the new ideas from the available ideas add form to the firestore database
