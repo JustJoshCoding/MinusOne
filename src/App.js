@@ -6,6 +6,7 @@ import "./App.css";
 import { BrowserRouter, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Alert from "./components/Alert";
+import IdeaPage from "./Pages/IdeaPage";
 
 const useStyles = makeStyles(() => ({
   App: {
@@ -15,17 +16,18 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+
 function App() {
   const classes = useStyles();
 
   return (
     <BrowserRouter>
-      <div className={classes.App}>
+       <div className={classes.App}>
         <Header />
         <Route path="/" component={Homepage} exact />
+        <Route path="/ideas" component={IdeaPage} exact />
         <Route path="/groups" component={Groups} exact />
         <Route path="/groupadd" component={GroupAdd} exact />
-
       </div>
       <Alert />
     </BrowserRouter>
