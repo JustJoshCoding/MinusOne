@@ -1,6 +1,0 @@
-0000000000000000000000000000000000000000 241e903d0ab0a2608c32745b8218a4a109bfbc39 Joshua Obrien <joshua.obrien@my.uwi.edu> 1644296866 -0400	branch: Created from origin/JustJoshCoding
-241e903d0ab0a2608c32745b8218a4a109bfbc39 d62de38f53298ee4985a8969e4e83fd14ab0952e Joshua Obrien <joshua.obrien@my.uwi.edu> 1644296978 -0400	commit: updated UI
-d62de38f53298ee4985a8969e4e83fd14ab0952e 06f5fea35fefda27fd336867b02bd0567f007968 Joshua Obrien <joshua.obrien@my.uwi.edu> 1644358540 -0400	pull --progress origin: Fast-forward
-06f5fea35fefda27fd336867b02bd0567f007968 7ec1dab362b280c63cb1df8dc69122913ed2bc2c Joshua Obrien <joshua.obrien@my.uwi.edu> 1644691686 -0400	commit: trying to get this thing to work
-7ec1dab362b280c63cb1df8dc69122913ed2bc2c a757fc76a2562b4c7ba6c70de61baac510f78c99 Joshua Obrien <joshua.obrien@my.uwi.edu> 1645223478 -0400	commit: Updating UI with firebase functionality
-a757fc76a2562b4c7ba6c70de61baac510f78c99 860e3f060fcfd57920cf84e5f25bdc5c48ef6a03 Joshua Obrien <joshua.obrien@my.uwi.edu> 1646353787 -0400	commit: got firestore firebase to work

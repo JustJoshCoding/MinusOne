@@ -14,7 +14,7 @@ const ProManageContext = ({ children }) => {
   });
 
   const [user, setUser] = useState(null);
-  const [availIdeas, setAvailIdeas] = useState([])
+  const [availIdeas, setAvailIdeas] = useState([]);
 
   // setting the user state to the user that is currently logged in
   useEffect(() => {
