@@ -1,50 +1,20 @@
-import { Box, Button, TextField } from "@material-ui/core";
+import { Box, TextField, Typography } from "@material-ui/core";
 import { useState } from "react";
-import { ProManageState } from "../../ProManageContext";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
 
-const Signup = ({ handleClose }) => {
+function Signup() {
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { setAlert } = ProManageState();
-
-  const handleSubmit = async () => {
-    if (password !== confirmPassword) {
-      setAlert({
-        open: true,
-        message: "Passwords do not match",
-        type: "error",
-      });
-      return;
-    }
-
-    try {
-      const result = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      setAlert({
-        open: true,
-        message: `Sign Up Successful. Welcome ${result.user.email}`,
-        type: "success",
-      });
-
-      handleClose();
-    } catch (error) {
-      setAlert({
-        open: true,
-        message: error.message,
-        type: "error",
-      });
-      return;
-    }
-  };
-
-  return (
+  return {
+    firstname,
+    lastname,
+    email,
+    password,
+    confirmPassword,
+    renderSignUp: (
     <Box
       p={3}
       style={{
@@ -53,12 +23,29 @@ const Signup = ({ handleClose }) => {
         gap: "20px",
       }}
     >
+      <Typography >Please fill out the fields below:</Typography>
       <TextField
         variant="outlined"
         type="email"
         label="Enter Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        fullWidth
+      />
+       <TextField
+        variant="outlined"
+        type="name"
+        label="Enter First Name"
+        value={firstname}
+        onChange={(e) => setFirstname(e.target.value)}
+        fullWidth
+      />
+      <TextField
+        variant="outlined"
+        type="email"
+        label="Enter Last Name"
+        value={lastname}
+        onChange={(e) => setLastname(e.target.value)}
         fullWidth
       />
       <TextField
@@ -77,16 +64,8 @@ const Signup = ({ handleClose }) => {
         onChange={(e) => setConfirmPassword(e.target.value)}
         fullWidth
       />
-      <Button
-        variant="contained"
-        size="large"
-        style={{ backgroundColor: "#EEBC1D" }}
-        onClick={handleSubmit}
-      >
-        Sign Up
-      </Button>
     </Box>
-  );
+  )}
 };
 
 export default Signup;

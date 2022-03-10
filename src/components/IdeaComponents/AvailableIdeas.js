@@ -11,6 +11,7 @@ import AddIdea from './AddIdea';
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { ProManageState } from '../../ProManageContext';
+import { Box } from '@material-ui/core';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -57,14 +58,14 @@ export default function StickyHeadTable() {
   };
 
   return (
-    <div style={{marginLeft: 180, marginRight: 180}}>
+    <Box sx={{ marginLeft: 180, marginRight: 180}}>
       {user && ( <AddIdea /> )}
       <br/>
       <Paper variant='elevation24' sx={{ width: '100%', overflow: 'hidden' }}>
         <TableContainer>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
-              <TableRow>
+              <StyledTableRow>
                 {columns.map((column) => (
                   <StyledTableCell
                     key={column.id}
@@ -74,14 +75,14 @@ export default function StickyHeadTable() {
                     {column.label}
                   </StyledTableCell>
                 ))}
-              </TableRow>
+              </StyledTableRow>
             </TableHead>
             <TableBody>
               {availIdeas
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                   return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                    <StyledTableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                       {columns.map((column) => {
                         const value = row[column.id];
                         return (
@@ -92,7 +93,7 @@ export default function StickyHeadTable() {
                           </TableCell>
                         );
                       })}
-                    </TableRow>
+                    </StyledTableRow>
                   );
                 })}
             </TableBody>
@@ -109,6 +110,6 @@ export default function StickyHeadTable() {
         />
         <Button variant="contained" color="primary">Smart</Button>
       </Paper>
-    </div>
+    </Box>
   );
 }

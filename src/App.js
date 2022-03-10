@@ -7,6 +7,8 @@ import { BrowserRouter, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Alert from "./components/Alert";
 import IdeaPage from "./Pages/IdeaPage";
+import ProfilePage from "./Pages/ProfilePage";
+import Registration from "./components/Authentication/Registration";
 
 const useStyles = makeStyles(() => ({
   App: {
@@ -28,6 +30,8 @@ function App() {
         <Route path="/ideas" component={IdeaPage} exact />
         <Route path="/groups" component={Groups} exact />
         <Route path="/groupadd" component={GroupAdd} exact />
+        <Route path="/profile" component={ProfilePage} exact />
+        <Route path="/registration" component={Registration} exact />
       </div>
       <Alert />
     </BrowserRouter>

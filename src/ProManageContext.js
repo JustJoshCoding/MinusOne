@@ -15,7 +15,24 @@ const ProManageContext = ({ children }) => {
 
   const [user, setUser] = useState(null);
   const [availIdeas, setAvailIdeas] = useState([]);
-  console.log(availIdeas)
+  const [groups, setGroups] = useState([]);
+  const [users, setUsers] = useState([])
+  useEffect(() => {
+    const groupRef = collection(db, "Groups");
+    
+    const getGroups = async  () => {
+      const data = await getDocs(groupRef);
+      console.log(data)
+      if (data) {
+        setGroups(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      }
+      else {
+        console.log("No Groups Available, Please check back later");
+      }
+    };
+    getGroups()
+    
+  }, []);
   // setting the user state to the user that is currently logged in
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -41,6 +58,24 @@ const ProManageContext = ({ children }) => {
     }
   }, [user]);
   
+  // useEffect(() => {
+  //   if (user) {
+  //     const userRef = doc(db, "users", user?.uid);
+  //     var unsubscribe = onSnapshot(userRef, (newUserDetails) => {
+  //       if (newUserDetails.exists()) {
+  //         console.log(newUserDetails.data().users);
+  //         setUsers(newUserDetails.data().users);
+  //       } else {
+  //         console.log("No Users");
+  //       }
+  //     });
+
+  //     return () => {
+  //       unsubscribe();
+  //     };
+  //   }
+  // }, [users]);
+
   return (
     <ProManage.Provider
       value={{
@@ -48,6 +83,7 @@ const ProManageContext = ({ children }) => {
         setAlert,
         user,
         availIdeas,
+        groups,
       }}
     >
       {children}

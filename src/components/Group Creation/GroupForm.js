@@ -44,11 +44,11 @@ function GroupForm() {
     try {
     await addDoc(
         groupRef,
-        {inputField: inputField}
+        {GroupMembers: inputField}
     );
     setAlert({
         open: true,
-        message: `${inputField.fullName} Added to the Available Ideas!`,
+        message: "Added Group to Database!",
         type: "success",
     });
     } catch (error) {

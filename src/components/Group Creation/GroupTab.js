@@ -13,7 +13,8 @@ import AddGroup from './AddGroup';
 import { IconButton } from '@material-ui/core';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Collapse } from '@material-ui/core';
-
+import { Groups } from '@mui/icons-material';
+import { ProManageState } from '../../ProManageContext';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -37,9 +38,8 @@ const ExpandMore = styled((props) => {
   
 
 export default function BasicGrid() {
-
+  const { setAlert, groups } = ProManageState();
   const [expanded, setExpanded] = React.useState(false);
-
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -59,7 +59,7 @@ export default function BasicGrid() {
       <CardContent>
         {
         <Typography variant="h6" component="div">
-          Number of Members
+          {groups.length}
         </Typography>
         }
       </CardContent>
@@ -75,7 +75,12 @@ export default function BasicGrid() {
           </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
               <CardContent>
-                <Typography paragraph>Lists Name of Members</Typography>
+                <Typography paragraph>Group Memebers</Typography>
+                {groups.forEach(element => {
+                  console.log(element.GroupMembers)
+                  return element.GroupMember;
+                })}
+                
               </CardContent>
             </Collapse>
           
@@ -87,7 +92,7 @@ export default function BasicGrid() {
     
     <Box sx={{ flexGrow: 1 }}>
       <AddGroup />
-      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12.5}} >
+      {groups.length > 0 ? <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12.5}} >
         {Array.from(Array(6)).map((_, index) => (
             <Grid item xs={4} sm={4} md={4} key={index}>
                 <Item>
@@ -98,7 +103,7 @@ export default function BasicGrid() {
             </Grid>
         ))}
         
-      </Grid>
+      </Grid> : <h1>No Groups Available</h1>}
     </Box>
   );
 }
