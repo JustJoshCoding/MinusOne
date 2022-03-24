@@ -3,12 +3,13 @@ import Homepage from "./Pages/HomePage";
 import Groups from "./Pages/Groups";
 import GroupAdd from "./Pages/GroupAdd";
 import "./App.css";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Alert from "./components/Alert";
 import IdeaPage from "./Pages/IdeaPage";
 import ProfilePage from "./Pages/ProfilePage";
 import Registration from "./components/Authentication/Registration";
+import Dashboard from "./Pages/Dashboard";
 
 const useStyles = makeStyles(() => ({
   App: {
@@ -25,13 +26,33 @@ function App() {
   return (
     <BrowserRouter>
        <div className={classes.App}>
-        <Header />
-        <Route path="/" component={Homepage} exact />
-        <Route path="/ideas" component={IdeaPage} exact />
-        <Route path="/groups" component={Groups} exact />
-        <Route path="/groupadd" component={GroupAdd} exact />
-        <Route path="/profile" component={ProfilePage} exact />
-        <Route path="/registration" component={Registration} exact />
+       <Header />
+        <Routes>
+          <Route
+            path='/ideas'
+            element={<IdeaPage/>}
+          />
+          <Route
+            path='/groups'
+            element={<Groups/>}
+          />
+          <Route
+            path='/groupadd'
+            element={<GroupAdd/>}
+          />
+          <Route
+            path='/profile'
+            element={<ProfilePage/>}
+          />
+          <Route
+            path='/registration'
+            element={<Registration/>}
+          />
+          <Route
+            path='/dashboard'
+            element={<Dashboard/>}
+          />
+        </Routes>
       </div>
       <Alert />
     </BrowserRouter>

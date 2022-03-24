@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import { Avatar, Box, Button } from "@material-ui/core";
@@ -40,7 +40,7 @@ export default function UserSidebar() {
     right: false,
   });
   const { user, setAlert } = ProManageState();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -103,7 +103,7 @@ export default function UserSidebar() {
                 >
                   {user.displayName || user.email}
                   <Box sx={{margin: 6, paddingTop: 100}} >
-                    <Fab variant="extended" onClick={()=> history.push('/profile')}>
+                    <Fab variant="extended" onClick={()=> navigate('/profile')}>
                       <NavigationIcon sx={{ mr: 1 }} />
                         Profile
                     </Fab>

@@ -5,6 +5,7 @@ const Groups = () => {
   return (
     <>
       <GroupTab />
+      
     </>
   );
 };

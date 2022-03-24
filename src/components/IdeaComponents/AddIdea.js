@@ -43,17 +43,28 @@ const useStyles = makeStyles((theme) => ({
 
 const AddIdea = () => {
     const classes = useStyles();
-    const { setAlert } = ProManageState();
+    const { setAlert, availIdeas, setAvailIdeas } = ProManageState();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('');
     
-    const addToAvailIdeas = async () => {
+    const addToAvailIdeas = async (e) => {
+        e.preventDefault()
+        if (!name || !description || !type) {
+            setAlert({
+                open: true,
+                message: 'Please fill all fields',
+                type: "error",
+            });
+            return
+        }
         const ideaRef = collection(db, "Available Ideas");
+        const newData = {name: name, description: description, type: type};
+        availIdeas.push(newData);
         try {
         await addDoc(
             ideaRef,
-            {name: name, description: description, type: type}
+            newData
         );
         setAlert({
             open: true,

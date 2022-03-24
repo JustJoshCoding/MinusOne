@@ -11,14 +11,20 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { ProManageState } from "../../ProManageContext";
+import Slider from '@mui/material/Slider';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import { styled } from '@mui/material/styles';
 
-const steps = ['User Credentials', 'My Skills'];
+const steps = ['User Credentials', 'My Skills', 'Skill Confidence Levels'];
 
 
 export default function HorizontalNonLinearStepper({ handleClose }) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
-  const { setAlert } = ProManageState();
+  const [confidenceLevels, setConfidenceLevels] = React.useState([]);
+  const { setAlert, user } = ProManageState();
+  
 
   const totalSteps = () => {
     return steps.length;
@@ -46,14 +52,20 @@ export default function HorizontalNonLinearStepper({ handleClose }) {
     setActiveStep(newActiveStep);
   };
 
-  const handleComplete = () => {
-    const newCompleted = completed;
-    newCompleted[activeStep] = true;
-    setCompleted(newCompleted);
-    handleNext();
+  const handleStep = (step) => () => {
+    setActiveStep(step);
   };
 
-  const {renderSignUp, firstname, lastname, email, password, confirmPassword} = Signup();
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+    setCompleted({});
+  };
+
+  const {renderSignUp, firstname, lastname, email, id, password, confirmPassword} = Signup();
   const {
     renderMySkills,
     docu,
@@ -67,14 +79,62 @@ export default function HorizontalNonLinearStepper({ handleClose }) {
     bac, 
   } = MySkills();
 
+  var skills = [];
+  if (docu) skills.push("documentation");
+  if (web) skills.push("web design");
+  if (css) skills.push("cascading style sheets");
+  if (pro) skills.push("programming");
+  if (lea) skills.push("leadership");
+  if (dat) skills.push("databasse management");
+  if (res) skills.push("researching and information gathering");
+  if (ent) skills.push("entrepreneurship");
+  if (bac) skills.push("backend development");
+  
+  let confidence = [];
+  const handleSliderChange = (skill, value) => {
+    confidence.push({skill: skill, confidence: value});
+  };
+ 
+  
+  const handleComplete = () => {
+    const newCompleted = completed;
+    newCompleted[activeStep] = true;
+    if (activeStep === 2){
+      let tempArr = [];
+      console.log("test1")
+      skills.map(i => {
+        let temp = 0;
+        confidence.map(j =>{
+          if (i === j.skill && j.confidence > temp)
+            temp = j.confidence
+        })
+        tempArr.push({skill: i, confidence: temp})
+        //console.log("skill: ", i, "value: ", temp )
+      })
+      setConfidenceLevels(tempArr);
+    }
+    setCompleted(newCompleted);
+    handleNext();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if(firstname === "" || lastname === "" || email === ""){
+      setAlert({
+        open: true,
+        message: "Please fill out all the fields for User Credentials",
+        type: "error",
+      });
+      handleReset();
+      return;
+    } 
     if (password !== confirmPassword) {
       setAlert({
         open: true,
         message: "Passwords do not match",
         type: "error",
       });
+      handleReset();
       return;
     }
     
@@ -85,12 +145,9 @@ export default function HorizontalNonLinearStepper({ handleClose }) {
         password,
       );
       const userRef = doc(db, "users", auth.currentUser.uid);
-      const skills = {
-        docu: docu, web: web, css: css, pro: pro, lea: lea, dat: dat, res: res, ent: ent, bac: bac, 
-      }
       await setDoc(
         userRef,
-        { firstname: firstname, lastname: lastname, initials: firstname[0] + lastname[0], email: email, skills: skills},
+        { ID: id, firstname: firstname, lastname: lastname, initials: (firstname[0] + lastname[0].toUpperCase()), email: email, skills: confidenceLevels, groupName: ""},
         { merge: true }
       );
       setAlert({
@@ -104,16 +161,56 @@ export default function HorizontalNonLinearStepper({ handleClose }) {
         message: error.message,
         type: "error",
       });
+      handleReset();
       return;
     }
   };
 
+  const PrettoSlider = styled(Slider)({
+    color: '#52af77',
+    height: 8,
+    '& .MuiSlider-track': {
+      border: 'none',
+    },
+    '& .MuiSlider-thumb': {
+      height: 24,
+      width: 24,
+      backgroundColor: '#fff',
+      border: '2px solid currentColor',
+      '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
+        boxShadow: 'inherit',
+      },
+      '&:before': {
+        display: 'none',
+      },
+    },
+    '& .MuiSlider-valueLabel': {
+      lineHeight: 1.2,
+      fontSize: 12,
+      background: 'unset',
+      padding: 0,
+      width: 32,
+      height: 32,
+      borderRadius: '50% 50% 50% 0',
+      backgroundColor: '#52af77',
+      transformOrigin: 'bottom left',
+      transform: 'translate(50%, -100%) rotate(-45deg) scale(0)',
+      '&:before': { display: 'none' },
+      '&.MuiSlider-valueLabelOpen': {
+        transform: 'translate(50%, -100%) rotate(-45deg) scale(1)',
+      },
+      '& > *': {
+        transform: 'rotate(45deg)',
+      },
+    },
+  });
+
   return (
-    <Box sx={{paddingTop: 3, m: 5}}>
-      <Stepper activeStep={activeStep}>
+    <Box sx={{psetingTop: 3, m: 5}}>
+      <Stepper nonLinear activeStep={activeStep}>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
-            <StepButton color="inherit">
+            <StepButton color="inherit" onClick={handleStep(index)}>
               {label}
             </StepButton>
           </Step>
@@ -121,6 +218,23 @@ export default function HorizontalNonLinearStepper({ handleClose }) {
       </Stepper>
       {activeStep === 0 && renderSignUp}
       {activeStep === 1 && renderMySkills}
+      {activeStep === 2 && <Box>
+            <Typography>How confident are you in your skills</Typography>
+            <List spacing={2}>
+                {skills.map(skill => 
+                    <ListItem>
+                        {skill}
+                        <PrettoSlider
+                            valueLabelDisplay="auto"
+                            aria-label="pretto slider"
+                            onChange={(e) => 
+                                handleSliderChange(skill, e.target.value)
+                            }
+                        />
+                    </ListItem>)
+                }
+            </List>
+        </Box>}
       <div>
         {allStepsCompleted() ? (
           <React.Fragment>
@@ -143,30 +257,31 @@ export default function HorizontalNonLinearStepper({ handleClose }) {
           <React.Fragment>
             <Typography sx={{ ml: 10, mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+              { activeStep !== 0 && <Button
+                  color="inherit"
+                  disabled={activeStep === 0}
+                  style={{ marginRight: 5, color: 'black', backgroundColor: "#EEBC1D" }}
+                  onClick={handleBack}
+                  sx={{ mr: 1 }}
+                >
+                  Back
+              </Button>}
               <Box sx={{ flex: '1 1 auto' }} />
-                {activeStep === 0 ? (
-                <React.Fragment>
-                  <Button
-                      variant="contained"
-                      size="medium"
-                      style={{ marginRight: 5, color: 'black', backgroundColor: "#EEBC1D" }}
-                      onClick={handleComplete}
-                      >
-                      Next
-                    </Button>
-                </React.Fragment>
+              <Button onClick={handleNext} sx={{ mr: 1 }} style={{ marginRight: 5, color: 'black', backgroundColor: "#EEBC1D" }}>
+                Next
+              </Button>
+              {activeStep !== steps.length &&
+                (completed[activeStep] ? (
+                  <Typography variant="caption" sx={{ display: 'inline-block' }}>
+                    Step {activeStep + 1} already completed
+                  </Typography>
                 ) : (
-                  <React.Fragment>
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      style={{ marginRight: 5, color: 'black', backgroundColor: "#EEBC1D" }}
-                      onClick={handleComplete}
-                      >
-                      Next
-                    </Button>
-                  </React.Fragment>
-                )} 
+                  <Button onClick={handleComplete} style={{ marginRight: 5, color: 'black', backgroundColor: "#EEBC1D"}}>
+                    {completedSteps() === totalSteps() - 1
+                      ? 'Finish'
+                      : 'Complete Step'}
+                  </Button>
+                ))} 
             </Box>
           </React.Fragment>
         )}

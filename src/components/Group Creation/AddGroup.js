@@ -13,8 +13,8 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import AddIcon from '@mui/icons-material/Add';
 import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import { Button } from '@mui/material';
-import { useHistory } from "react-router-dom";
-
+import { useNavigate  } from "react-router-dom";
+import { ProManageState } from '../../ProManageContext';
 
 
 
@@ -63,12 +63,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const { setAlert, user, userInfo } = ProManageState();
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
+
   };
 
   const handleMobileMenuClose = () => {
@@ -84,10 +86,32 @@ export default function PrimarySearchAppBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   
-
+  const handleGoToCreateForm = () => {
+    if (user) {
+      if (userInfo.groupName === "") {
+        navigate(`/groupadd`);
+      }
+      else {
+        setAlert({
+          open: true,
+          message: "You already belong to a group",
+          type: "error",
+      });
+      return;
+      }
+    }
+    else {
+      setAlert({
+        open: true,
+        message: "Please Login first",
+        type: "error",
+    });
+    return;
+    }
+  }
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -107,7 +131,7 @@ export default function PrimarySearchAppBar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>
-          <Button onClick={() => history.push(`/groupadd`)}> New Group</Button>
+          <Button onClick={handleGoToCreateForm}> New Group</Button>
           </MenuItem>
     </Menu>
   );
@@ -139,7 +163,7 @@ export default function PrimarySearchAppBar() {
         >
           
         </IconButton>
-        <p>Add Group</p>
+        <p>Create New Group</p>
       </MenuItem>
     </Menu>
   );
@@ -190,7 +214,7 @@ export default function PrimarySearchAppBar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-                <p>Add New Group</p>
+                <p>Create New Group</p>
               <AddIcon />
             </IconButton>
           </Box>

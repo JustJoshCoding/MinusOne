@@ -1,10 +1,10 @@
 import React from "react";
-import GroupForm from "../components/Group Creation/GroupForm";
+import CreateNewGroup from "../components/Group Creation/CreateNewGroup";
 
 const GroupAdd = () => {
   return (
     <>
-      <GroupForm />
+      <CreateNewGroup />
     </>
   );
 };

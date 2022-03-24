@@ -82,12 +82,8 @@ const MySkills = () => {
             <Checkbox
               value={bac}
               checked={bac}
-              onChange={(e) => setBac(e.target.target)}
+              onChange={(e) => setBac(e.target.checked)}
             />} label="Backend Development" />
-
-          
-         
-            <FormControlLabel control={<Checkbox value={bac}/>} label="Backend Development" />
         </FormGroup>
     </Box>
   )}
