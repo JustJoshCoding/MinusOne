@@ -6,14 +6,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import Button from '@mui/material/Button';
 import AddIdea from './AddIdea';
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { ProManageState } from '../../ProManageContext';
 import { Box } from '@material-ui/core';
-import { db } from '../../firebase';
-import { getDoc, doc } from "firebase/firestore";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -41,21 +38,10 @@ const columns = [
   { id: 'type', label: 'Type', align: 'left', minWidth: 49 },
 ];
 
-const types = [
-  {id: "tech", name: "Technical Computer Science or Information Technology Projects"},
-  {id: "busi", name: "Business-Oriented Computer Science or Information Technology Projects"},
-  {id: "reser", name: "Research Projects"},
-  {id: "entr", name: "Entrepreneurial or Student-Proposed Projects"}
-];
-
 export default function StickyHeadTable() {
-  const { user, isAdmin, availIdeas, setAlert } = ProManageState();
+  const { user, availIdeas, setAlert } = ProManageState();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  
-  
-  //console.log("available ideas: ", availIdeas);
-  
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -66,96 +52,8 @@ export default function StickyHeadTable() {
     setPage(0);
   };
 
-  const handleSmartButton = async () => {
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
-    const userSkills = userSnap.data().skills;
-
-    //max 50, min 10
-    let tech = 0;
-    let busi = 0;
-    let reser = 0;
-    let entr = 0;
-    const difficulty = ['Easy','Medium','Hard'];
-
-    // if (user) {
-    //   userSkills.map(skill => {
-    //     // 1
-    //     if (skill.skill === "Documentation") {
-    //       busi += 50;
-    //       reser += 50;
-    //       entr += 50;
-    //       tech += 10;
-    //     }
-    //     // 2
-    //     if (skill.skill === "Web Design") {
-    //       busi += 10;
-    //       reser += 10;
-    //       entr += 10;
-    //       tech += 50;
-    //     }
-    //     // 3
-    //     if (skill.skill === "Css") {
-    //       busi += 10;
-    //       reser += 10;
-    //       entr += 10;
-    //       tech += 50;
-    //     }
-    //     // 4
-    //     if (skill.skill === "Programming") {
-    //       busi += 10;
-    //       reser += 10;
-    //       entr += 10;
-    //       tech += 50;
-    //     }
-    //     //5
-    //     if (skill.skill === "Leadership") {
-    //       busi += 50;
-    //       reser += 50;
-    //       entr += 50;
-    //       tech += 50;
-    //     }
-    //     // 6
-    //     if (skill.skill === "Database Management") {
-    //       busi += 10;
-    //       reser += 10;
-    //       entr += 50;
-    //       tech += 50;
-    //     }
-    //     // 7
-    //     if (skill.skill === "Researching") {
-    //       busi += 10;
-    //       reser += 50;
-    //       entr += 10;
-    //     }
-    //     // 8
-    //     if (skill.skill === "Entrepreneur") {
-          
-    //     }
-    //     // 9
-    //     if (skill.skill === "Backend Development") {
-          
-    //     }
-    //   })
-      
-        // }
-        // else {
-        //   setAlert({
-        //     open: true,
-        //     message: "please login to use this feature",
-        //     type: "error",
-        //   });
-        // }
-  }
-
-  const handleSelectIdea = () => {
-    
-  }
-
   return (
     <Box sx={{ marginLeft: 180, marginRight: 180}}>
-      {isAdmin && ( <AddIdea /> )}
-      <br/>
       <Paper variant='elevation24' sx={{ width: '100%', overflow: 'hidden' }}>
         <TableContainer>
           <Table stickyHeader aria-label="sticky table">
@@ -177,7 +75,7 @@ export default function StickyHeadTable() {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                   return (
-                    <StyledTableRow hover role="checkbox" tabIndex={-1} key={row.code} onClick={handleSelectIdea}>
+                    <StyledTableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                       {columns.map((column) => {
                         const value = row[column.id];
                         return (
@@ -203,7 +101,6 @@ export default function StickyHeadTable() {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-        <Button onClick={handleSmartButton} variant="contained" color="primary">Smart</Button>
       </Paper>
     </Box>
   );

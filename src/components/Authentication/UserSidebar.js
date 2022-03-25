@@ -1,10 +1,13 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
-import { Avatar, Button } from "@material-ui/core";
+import { Avatar, Box, Button } from "@material-ui/core";
 import { ProManageState } from "../../ProManageContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
+import NavigationIcon from '@mui/icons-material/Navigation';
+import Fab from '@mui/material/Fab';
 
 const useStyles = makeStyles({
   container: {
@@ -37,6 +40,7 @@ export default function UserSidebar() {
     right: false,
   });
   const { user, setAlert } = ProManageState();
+  const navigate = useNavigate();
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -98,6 +102,12 @@ export default function UserSidebar() {
                   }}
                 >
                   {user.displayName || user.email}
+                  <Box sx={{margin: 6, paddingTop: 100}} >
+                    <Fab variant="extended" onClick={()=> navigate('/profile')}>
+                      <NavigationIcon sx={{ mr: 1 }} />
+                        Profile
+                    </Fab>
+                  </Box>
                 </span>
               </div>
               <Button

@@ -7,7 +7,6 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 const Login = ({ handleClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const { setAlert } = ProManageState();
 
   const handleSubmit = async () => {
@@ -24,7 +23,7 @@ const Login = ({ handleClose }) => {
       const result = await signInWithEmailAndPassword(auth, email, password);
       setAlert({
         open: true,
-        message: `Sign Up Successful. Welcome ${result.user.email}`,
+        message: `Login Successful. Welcome ${result.user.email}`,
         type: "success",
       });
 

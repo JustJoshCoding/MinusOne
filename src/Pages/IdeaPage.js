@@ -5,21 +5,15 @@ import Box from '@mui/material/Box';
 import { useState } from "react";
 import AvailableIdeas from '../components/IdeaComponents/AvailableIdeas';
 import PastAcceptedPropsals from '../components/IdeaComponents/PastAcceptedPropsals';
-
+import CurrAccProposals from '../components/IdeaComponents/CurrAccProposals';
 
 const IdeaPage = () => {
   // set states
   const [value, setValue] = useState('one');
-  const [setOpen] = useState(false);
 
   // handle functions
   const handleChange = (event, newValue) => {
     setValue(newValue);
-  };
-
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   return (
@@ -40,8 +34,9 @@ const IdeaPage = () => {
         <Tab value="two" label="Current Accepted Proposals" />
         <Tab value="three" label="Past Accepted Proposals" />
       </Tabs>
-      {value === "one" && <AvailableIdeas handleClose={handleClose} />}
-      {value === "two" && <PastAcceptedPropsals handleClose={handleClose} />}
+      {value === "one" && <AvailableIdeas/>}
+      {value === "two" && <CurrAccProposals/>}
+      {value === "three" && <PastAcceptedPropsals/>}
     </Box>
   </div>
   );

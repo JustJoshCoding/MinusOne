@@ -9,7 +9,7 @@ import {
   makeStyles,
   ThemeProvider,
 } from "@material-ui/core/styles";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ProManageState } from "../ProManageContext";
 import AuthModal from "./Authentication/AuthModal";
 import UserSidebar from "./Authentication/UserSidebar";
@@ -45,7 +45,7 @@ function Header() {
 
   const classes = useStyles();
   const { user } = ProManageState();
-  const pages = ['Groups', 'Ideas', 'Submission'];
+  const pages = ['Dashboard','Groups', 'Ideas', 'Submission','Students'];
   
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -57,7 +57,7 @@ function Header() {
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -65,7 +65,7 @@ function Header() {
         <Container>
           <Toolbar>
             <Typography
-              onClick={() => history.push(`/`)}
+              onClick={() => navigate('/')}
               variant="h6"
               className={classes.title}
             >
@@ -104,7 +104,7 @@ function Header() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="right" onClick={() => history.push(`/${page}`)}>{page}</Typography>
+                  <Typography textAlign="right" onClick={() => navigate(`/${page}`)}>{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -114,7 +114,7 @@ function Header() {
               {pages.map((page) => (
                 <Button
                   key={page}
-                  onClick={() => history.push(`/${page}`)}
+                  onClick={() => navigate(`/${page}`)}
                   sx={{ my: 2, color: "gold", fontFamily: "Montserrat", display: "block" }}
                 >
                   {page}

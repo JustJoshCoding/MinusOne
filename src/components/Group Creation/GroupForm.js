@@ -44,11 +44,11 @@ function GroupForm() {
     try {
     await addDoc(
         groupRef,
-        {inputField: inputField}
+        {GroupMembers: inputField}
     );
     setAlert({
         open: true,
-        message: `${inputField.fullName} Added to the Available Ideas!`,
+        message: "Added Group to Database!",
         type: "success",
     });
     } catch (error) {
@@ -61,7 +61,7 @@ function GroupForm() {
 };
  
   const handleAddFields = () => {
-    setInputField([...inputField, { fullName: '', studentID: '', email: '' }])
+    setInputField([...inputField, { groupName: '', studentID: '', email: '' }])
   }
 
   const handleRemoveFields = id => {
@@ -78,7 +78,7 @@ function GroupForm() {
         { inputField.map((inputField, index) => (
           <div key={index}>
             <TextField 
-              name='fullName'
+              name='groupName'
               label='Full Name'
               variant='filled'
               value={inputField.fullName}
@@ -99,6 +99,7 @@ function GroupForm() {
             <TextField 
               name='email'
               label='Email'
+              type='email'
               variant='filled'
               value={inputField.email}
               onChange={event => handleChangeInput(index, event)}
