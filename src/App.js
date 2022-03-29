@@ -10,6 +10,8 @@ import IdeaPage from "./Pages/IdeaPage";
 import ProfilePage from "./Pages/ProfilePage";
 import Registration from "./components/Authentication/Registration";
 import Dashboard from "./Pages/Dashboard";
+import Submission from "./Pages/Submission.tsx";
+
 
 const useStyles = makeStyles(() => ({
   App: {
@@ -28,6 +30,10 @@ function App() {
        <div className={classes.App}>
        <Header />
         <Routes>
+        <Route
+            path='/submission'
+            element={<Submission/>}
+          />
           <Route
             path='/ideas'
             element={<IdeaPage/>}
