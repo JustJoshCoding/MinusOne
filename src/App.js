@@ -10,6 +10,9 @@ import IdeaPage from "./Pages/IdeaPage";
 import ProfilePage from "./Pages/ProfilePage";
 import Registration from "./components/Authentication/Registration";
 import Dashboard from "./Pages/Dashboard";
+import MyGroupPage from "./Pages/MyGroupPage";
+import ViewGroupPage from "./Pages/ViewGroupPage";
+import ViewProfilePage from "./Pages/ViewProfilePage";
 
 const useStyles = makeStyles(() => ({
   App: {
@@ -51,6 +54,18 @@ function App() {
           <Route
             path='/dashboard'
             element={<Dashboard/>}
+          />
+          <Route
+            path='/mygroup'
+            element={<MyGroupPage/>}
+          />
+          <Route
+            path='/group/:id'
+            element={<ViewGroupPage/>}
+          />
+          <Route
+            path='/userprofile/:id'
+            element={<ViewProfilePage/>}
           />
         </Routes>
       </div>

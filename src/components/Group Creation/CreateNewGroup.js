@@ -79,6 +79,7 @@ export default function CreateNewGroup() {
           projectType: '',
           projectScope: '',
           objectives: [],
+          description: '',
           beneficiaries: [],
           Benefits: [],
           stakeHolders: [],
