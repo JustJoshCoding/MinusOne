@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "./firebase";
-import { getDocs, getDoc, collection, doc, onSnapshot } from "firebase/firestore";
+import { getDocs, getDoc, collection, doc } from "firebase/firestore";
 
 const ProManage = createContext();
 
@@ -13,10 +13,12 @@ const ProManageContext = ({ children }) => {
     type: "success",
   });
 
+  // application states
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [availIdeas, setAvailIdeas] = useState([]);
   const [groups, setGroups] = useState([]);
+  const [groupInfo, setGroupInfo] = useState(null);
   const [userInfo, setUserInfo] = useState({
     ID: "",
     email: "",
@@ -27,6 +29,7 @@ const ProManageContext = ({ children }) => {
     skills: []
   });
 
+  // check if user is an admin and get user info
   const checkAdminStatus = async (newUser) => {
     const userRef = doc(db, "users", newUser?.uid);
     const userSnap = await getDoc(userRef);
@@ -35,24 +38,49 @@ const ProManageContext = ({ children }) => {
       setIsAdmin(true)
     }
   }
- 
+
   useEffect(() => {
+    var getGroupInfo = () => {
+      const group = groups.find(group => group.groupName === userInfo.groupName);
+      setGroupInfo(group);
+    }
+    getGroupInfo();
+  }, [groups, userInfo, user])
+  
+
+  useEffect(() => {
+    //database references
+    const ideaRef = collection(db, "Available Ideas");
     const groupRef = collection(db, "Groups");
-    
+ 
+    // get available ideas
+    const getAvailIdeas = async  () => {
+      const data = await getDocs(ideaRef);
+      if (data) {
+        setAvailIdeas(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      }
+      else {
+        console.log("No Available Ideas");
+      }
+    };
+    // get all group info
     const getGroups = async  () => {
       const data = await getDocs(groupRef);
       if (data) {
         setGroups(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       }
       else {
-        console.log("No Groups Available, Please check back later");
+        console.log("No Groups Available");
       }
     };
-    getGroups()
+   
+    getAvailIdeas();
+    getGroups();
     
-  }, []);
-  
-  // setting the user state to the user that is currently logged in
+    
+  }, [])
+ 
+  // setting the user state to the user that is currently logged in or null if no user
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -75,21 +103,6 @@ const ProManageContext = ({ children }) => {
     }); 
   }, []);
 
-  // loading available ideas from the firestore database
-  useEffect(() => {
-    const ideaRef = collection(db, "Available Ideas");
-    const getAvailIdeas = async  () => {
-      const data = await getDocs(ideaRef);
-      if (data) {
-        setAvailIdeas(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      }
-      else {
-        console.log("No Available Ideas, Please check back later");
-      }
-    };
-    getAvailIdeas()
-  }, []);  
-
   return (
     <ProManage.Provider
       value={{
@@ -102,6 +115,7 @@ const ProManageContext = ({ children }) => {
         setAvailIdeas,
         availIdeas,
         isAdmin,
+        groupInfo
       }}
     >
       {children}

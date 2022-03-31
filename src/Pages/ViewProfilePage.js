@@ -1,6 +1,5 @@
 import { Typography } from '@material-ui/core'
-import React, { useState } from 'react';
-import { ProManageState } from '../ProManageContext';
+import { useState, useEffect } from 'react';
 import { Box } from "@material-ui/core";
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid';
@@ -15,8 +14,29 @@ import ListItemText from '@mui/material/ListItemText';
 import StarIcon from '@mui/icons-material/Star';
 import { Card } from '@mui/material';
 
+import { useParams } from "react-router-dom";
+import { db } from "../firebase";
+import { collection, getDocs} from "firebase/firestore";
+
+
 const ProfilePage = () => {
-    const { userInfo } = ProManageState();
+    const { id } = useParams();
+    const [userInfo, setUserInfo] = useState({});
+
+    const fetchUserProfile = async () => {
+        const usersRef = collection(db, "users");
+        const usersSnap = await getDocs(usersRef);
+        usersSnap.docs.map((doc) => {
+            if (doc.data().ID === id){
+                setUserInfo(doc.data());
+                return;
+            }
+        });
+    }
+
+    useEffect(() => {
+        fetchUserProfile();
+      }, [userInfo])
 
     return (
         <Box sx={{ flexGrow: 1, margin: 180, paddingTop: '50px'}}>

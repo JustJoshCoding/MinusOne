@@ -6,8 +6,12 @@ import { Avatar, Box, Button } from "@material-ui/core";
 import { ProManageState } from "../../ProManageContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
-import NavigationIcon from '@mui/icons-material/Navigation';
-import Fab from '@mui/material/Fab';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import PersonIcon from '@mui/icons-material/Person';
+import GroupIcon from '@mui/icons-material/Group';
 
 const useStyles = makeStyles({
   container: {
@@ -102,13 +106,30 @@ export default function UserSidebar() {
                   }}
                 >
                   {user.displayName || user.email}
-                  <Box sx={{margin: 6, paddingTop: 100}} >
-                    <Fab variant="extended" onClick={()=> navigate('/profile')}>
-                      <NavigationIcon sx={{ mr: 1 }} />
-                        Profile
-                    </Fab>
-                  </Box>
                 </span>
+                <div>
+                  <span style={{ fontSize: 15, textShadow: "0 0 5px black" }}>
+                    <List>
+                        <ListItem button onClick={() => navigate('/profile')}>
+                          <ListItemIcon>
+                            <PersonIcon/>
+                          </ListItemIcon>
+                          <ListItemText primary="Profile" />
+                        </ListItem>
+                        <ListItem button onClick={() => navigate('/mygroup')}>
+                          <ListItemIcon>
+                            <GroupIcon/>
+                          </ListItemIcon>
+                          <ListItemText primary="Group" />
+                        </ListItem>
+                    </List>
+                  </span>
+                </div>
+                <div>
+                  <span style={{ fontSize: 15, textShadow: "0 0 5px black" }}>
+                    Watchlist
+                  </span>
+                </div>
               </div>
               <Button
                 variant="contained"

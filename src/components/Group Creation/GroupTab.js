@@ -9,12 +9,14 @@ import Typography from '@mui/material/Typography';
 import CardHeader from '@mui/material/CardHeader';
 import Avatar from '@mui/material/Avatar';
 import AddGroup from './AddGroup';
+import Tooltip from '@mui/material/Tooltip';
 import { IconButton, TextField } from '@material-ui/core';
 import { ProManageState } from '../../ProManageContext';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import { Button, Modal } from '@mui/material';
 import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { db } from '../../firebase';
+import { useNavigate } from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -48,13 +50,14 @@ const style = {
 }; 
 
 export default function BasicGrid() {
-  const { groups, user, setAlert, userInfo } = ProManageState();
+  const { groups, user, setAlert, userInfo, isAdmin } = ProManageState();
   const [open, setOpen] = React.useState(false);
   const [password, setPassword] = React.useState("");
   const [docid, setDocid] = React.useState("");
   const [name, setName] = React.useState("");
   const [pass, setPass] = React.useState("");
   const [i, setI] = React.useState(-1);
+  const navigate = useNavigate();
 
   const handleOpen = (docid, name, pass, i) => {
     setDocid(docid);
@@ -110,6 +113,15 @@ export default function BasicGrid() {
     handleClose();
   }
 
+  const handleGoToGroupPage = (id) => {
+    if (isAdmin) {
+      navigate(`/group/${id}`);
+    }
+    else console.log("Not admin"); return;
+  };
+
+  const handleGoToUserProfile = (id) => navigate(`/userprofile/${id}`);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AddGroup />
@@ -122,7 +134,7 @@ export default function BasicGrid() {
                         <Card variant="outlined">
                           <CardHeader
                             avatar = {
-                              <Avatar sx={{ bgcolor: "gold", color: "black", fontWeight: 'bold', width: 56, height: 56 }}>
+                              <Avatar onClick={()=>handleGoToGroupPage(group.id)} sx={{ bgcolor: "gold", color: "black", fontWeight: 'bold', width: 56, height: 56, cursor: 'pointer' }}>
                                 {group.logo}
                               </Avatar>
                             }
@@ -140,7 +152,18 @@ export default function BasicGrid() {
                             <AvatarGroup max={4}>
                               {group.groupMembers
                                 .map((member) => {
-                                return (<Avatar sx={{ bgcolor: 'gold', color: 'black' }} alt={`${member.firstname} ${member.lastname}`} src={member.img}>{member.initials}</Avatar>);
+                                return (
+                                <Tooltip title={`${member.firstname} ${member.lastname}`} placement="bottom-end">
+                                  <Avatar
+                                    sx={{ bgcolor: 'gold', color: 'black' }} 
+                                    alt={`${member.firstname} ${member.lastname}`} 
+                                    src={member.img}
+                                    onClick={() => handleGoToUserProfile(member.ID)}
+                                    >
+                                      {member.initials}
+                                  </Avatar>
+                                </Tooltip>
+                                );
                               })}
                             </AvatarGroup>
                             {group.groupMembers.length < 4 && user && userInfo.groupName === "" &&

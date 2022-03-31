@@ -104,10 +104,8 @@ const AddIdea = () => {
             </div>
             <div className={classes.Select}>
                 <FormControl sx={{ width: 'auto', minWidth: '20%'}}>
-                    <InputLabel id="myTypeLabel">Type</InputLabel>
+                    <InputLabel>Type</InputLabel>
                     <Select
-                        id="type"
-                        labelId="myTypeLabel"
                         label="Type"
                         value={type}
                         onChange={(e) => setType(e.target.value)}

@@ -1,7 +1,7 @@
 // Snack Component - https://material-ui.com/components/snackbars/
 import { Snackbar } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
-import { ProManageState } from "../ProManageContext";
+import{ ProManageState } from "../ProManageContext";
 
 const Alert = () => {
   const { alert, setAlert } = ProManageState();
