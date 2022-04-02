@@ -13,7 +13,7 @@ const ProManageContext = ({ children }) => {
     type: "success",
   });
 
-  // application states
+  // global states used in the application
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [availIdeas, setAvailIdeas] = useState([]);
@@ -73,7 +73,7 @@ const ProManageContext = ({ children }) => {
         console.log("No Groups Available");
       }
     };
-   
+    
     getAvailIdeas();
     getGroups();
     

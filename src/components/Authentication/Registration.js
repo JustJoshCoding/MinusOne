@@ -16,13 +16,21 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import { styled } from '@mui/material/styles';
 
-const steps = ['User Credentials', 'My Skills', 'Skill Confidence Levels'];
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { yellow } from '@mui/material/colors';
+
+
+const steps = ['User Credentials', 'My Skills', 'Skill Confidence Levels', 'Degree Type'];
 
 
 export default function HorizontalNonLinearStepper({ handleClose }) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
   const [confidenceLevels, setConfidenceLevels] = React.useState([]);
+  const [degree, setDegree] = React.useState("");
   const { setAlert, user } = ProManageState();
   
 
@@ -147,7 +155,7 @@ export default function HorizontalNonLinearStepper({ handleClose }) {
       const userRef = doc(db, "users", auth.currentUser.uid);
       await setDoc(
         userRef,
-        { ID: id, firstname: firstname, lastname: lastname, initials: (firstname[0] + lastname[0].toUpperCase()), email: email, skills: confidenceLevels, groupName: ""},
+        { ID: id, firstname: firstname, lastname: lastname, initials: (firstname[0] + lastname[0].toUpperCase()), email: email, skills: confidenceLevels, groupName: "", degree: degree},
         { merge: true }
       );
       setAlert({
@@ -234,7 +242,22 @@ export default function HorizontalNonLinearStepper({ handleClose }) {
                     </ListItem>)
                 }
             </List>
-        </Box>}
+      </Box>}
+      {activeStep === 3 && <Box sx={{m: 10}}>
+        <FormControl variant="outlined" style={{color: 'white'}} sx={{width: 250, marginLeft: 5}}>
+            <InputLabel style={{color: 'white' }}> Select a Degree</InputLabel>
+            <Select
+            value={degree}
+            onChange={(e)=> setDegree(e.target.value)}
+            >
+            <MenuItem value="">
+                <em>None</em>
+            </MenuItem>
+            <MenuItem value="BSc Information Technology">BSc Information Technology</MenuItem>
+            <MenuItem value="BSc Computer Science">BSc Computer Science</MenuItem>
+            </Select>
+        </FormControl>
+      </Box>}
       <div>
         {allStepsCompleted() ? (
           <React.Fragment>

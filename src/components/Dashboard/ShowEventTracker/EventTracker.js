@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Header from './Header';
 import Tasks from './Tasks';
+import "./styles.css";
 import AddEvent from './addEvent';
 import { makeStyles } from "@material-ui/core/styles";
 

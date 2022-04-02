@@ -327,7 +327,7 @@ export default function MyGroupPage() {
                             Objectives:
                         </Typography>
                         <br/>
-                        {groupInfo.objectives.length !== 0 ? 
+                        {(groupInfo.objectives.length !== 0 && groupInfo.objectives[0].Objective !== "" ) ? 
                         <List>
                             {groupInfo.objectives.map(obj => {
                                 return (
@@ -375,7 +375,7 @@ export default function MyGroupPage() {
                             Benefits:
                         </Typography>
                         <br/>
-                        {groupInfo.Benefits.length !== 0 ? 
+                        {(groupInfo.Benefits.length !== 0 && groupInfo.Benefits[0].Benefit !== "") ? 
                         <List>
                             {groupInfo.Benefits.map(obj => {
                                 return (
@@ -401,7 +401,7 @@ export default function MyGroupPage() {
                             Beneficiaries:
                         </Typography>
                         <br/>
-                        {groupInfo.beneficiaries.length !== 0 ? 
+                        {(groupInfo.beneficiaries.length !== 0 && groupInfo.beneficiaries[0].Beneficiary !== "") ? 
                         <List>
                             {groupInfo.beneficiaries.map(obj => {
                                 return (
@@ -427,7 +427,7 @@ export default function MyGroupPage() {
                             Stakeholders:
                         </Typography>
                         <br/>
-                        {groupInfo.stakeHolders.length !== 0 ? 
+                        {(groupInfo.stakeHolders.length !== 0 && groupInfo.stakeHolders[0].Stakeholder !== "") ? 
                         <List>
                             {groupInfo.stakeHolders.map(obj => {
                                 return (
@@ -453,7 +453,7 @@ export default function MyGroupPage() {
                             Deliverables:
                         </Typography>
                         <br/>
-                        {groupInfo.deliverables.length !== 0 ? 
+                        {(groupInfo.deliverables.length !== 0 && groupInfo.deliverables[0].Deliverable !== "" ) ? 
                         <List>
                             {groupInfo.deliverables.map(obj => {
                                 return (

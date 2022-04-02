@@ -78,74 +78,54 @@ export default function StickyHeadTable() {
     let entr = 0;
     const difficulty = ['Easy','Medium','Hard'];
 
-    // if (user) {
-    //   userSkills.map(skill => {
-    //     // 1
-    //     if (skill.skill === "Documentation") {
-    //       busi += 50;
-    //       reser += 50;
-    //       entr += 50;
-    //       tech += 10;
-    //     }
-    //     // 2
-    //     if (skill.skill === "Web Design") {
-    //       busi += 10;
-    //       reser += 10;
-    //       entr += 10;
-    //       tech += 50;
-    //     }
-    //     // 3
-    //     if (skill.skill === "Css") {
-    //       busi += 10;
-    //       reser += 10;
-    //       entr += 10;
-    //       tech += 50;
-    //     }
-    //     // 4
-    //     if (skill.skill === "Programming") {
-    //       busi += 10;
-    //       reser += 10;
-    //       entr += 10;
-    //       tech += 50;
-    //     }
-    //     //5
-    //     if (skill.skill === "Leadership") {
-    //       busi += 50;
-    //       reser += 50;
-    //       entr += 50;
-    //       tech += 50;
-    //     }
-    //     // 6
-    //     if (skill.skill === "Database Management") {
-    //       busi += 10;
-    //       reser += 10;
-    //       entr += 50;
-    //       tech += 50;
-    //     }
-    //     // 7
-    //     if (skill.skill === "Researching") {
-    //       busi += 10;
-    //       reser += 50;
-    //       entr += 10;
-    //     }
-    //     // 8
-    //     if (skill.skill === "Entrepreneur") {
+    if (user) {
+      userSkills.map(skill => {
+        // 1
+        if (skill.skill === "Documentation") {
+         
+        }
+        // 2
+        if (skill.skill === "Web Design") {
           
-    //     }
-    //     // 9
-    //     if (skill.skill === "Backend Development") {
+        }
+        // 3
+        if (skill.skill === "Css") {
+         
+        }
+        // 4
+        if (skill.skill === "Programming") {
+         
+        }
+        //5
+        if (skill.skill === "Leadership") {
+         
+        }
+        // 6
+        if (skill.skill === "Database Management") {
           
-    //     }
-    //   })
+        }
+        // 7
+        if (skill.skill === "Researching") {
+          
+        }
+        // 8
+        if (skill.skill === "Entrepreneur") {
+          
+        }
+        // 9
+        if (skill.skill === "Backend Development") {
+          
+        }
+      })
       
-        // }
-        // else {
-        //   setAlert({
-        //     open: true,
-        //     message: "please login to use this feature",
-        //     type: "error",
-        //   });
-        // }
+        }
+        else {
+          setAlert({
+            open: true,
+            message: "please login to use this feature",
+            type: "error",
+          });
+        }
   }
 
   const handleSelectIdea = () => {
@@ -159,19 +139,25 @@ export default function StickyHeadTable() {
       <Paper variant='elevation24' sx={{ width: '100%', overflow: 'hidden' }}>
         <TableContainer>
           <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <StyledTableRow>
+
+            <TableHead style={{ backgroundColor: "#EEBC1D" }}>
+              <TableRow>
                 {columns.map((column) => (
-                  <StyledTableCell
+                  <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ minWidth: column.minWidth }}
+                    style={{
+                      color: "black",
+                      fontWeight: "700",
+                      fontFamily: "Montserrat",
+                    }}
                   >
                     {column.label}
-                  </StyledTableCell>
+                  </TableCell>
                 ))}
-              </StyledTableRow>
+              </TableRow>
             </TableHead>
+            
             <TableBody>
               {availIdeas
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
