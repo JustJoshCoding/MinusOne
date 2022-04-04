@@ -15,6 +15,7 @@ const ProManageContext = ({ children }) => {
 
   // global states used in the application
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [availIdeas, setAvailIdeas] = useState([]);
   const [groups, setGroups] = useState([]);
@@ -55,9 +56,11 @@ const ProManageContext = ({ children }) => {
  
     // get available ideas
     const getAvailIdeas = async  () => {
+      setLoading(true);
       const data = await getDocs(ideaRef);
       if (data) {
         setAvailIdeas(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        setLoading(false);
       }
       else {
         console.log("No Available Ideas");
@@ -115,7 +118,8 @@ const ProManageContext = ({ children }) => {
         setAvailIdeas,
         availIdeas,
         isAdmin,
-        groupInfo
+        groupInfo,
+        loading
       }}
     >
       {children}

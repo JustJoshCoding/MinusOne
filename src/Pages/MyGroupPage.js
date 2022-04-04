@@ -44,7 +44,7 @@ const style = {
 
 const theme = createTheme({
     typography: {
-      fontFamily: 'Arial',
+      fontFamily: 'Montserrat', 
       fontSize: 12,
     },
   });

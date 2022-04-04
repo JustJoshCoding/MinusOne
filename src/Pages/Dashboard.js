@@ -65,14 +65,14 @@ export default function Dashboard() {
 
     return (
         <Box sx={{ m: 20}}>
-            <Grid container spacing={{ xs: 5, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} >
+            <Grid container spacing={{ xs: 5, md: 3 }} columns={{ xs: 8, sm: 8, md: 8 }} >
                 <Grid item xs={5} >
                     <Item>{showUpcommingEvents}</Item>
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={5}  >
                     <Item>{showCalendar}</Item>
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={5} >
                     <Item>{showTimeline}</Item>
                 </Grid>
             </Grid>

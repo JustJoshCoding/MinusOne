@@ -1,39 +1,27 @@
-import * as React from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import Button from '@mui/material/Button';
+import { useState } from 'react';
 import AddIdea from './AddIdea';
-import { styled } from '@mui/material/styles';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+
+import { makeStyles } from "@material-ui/core/styles";
+import Pagination from "@material-ui/lab/Pagination";
+import {
+  Container,
+  createTheme,
+  TableCell,
+  LinearProgress,
+  ThemeProvider,
+  Typography,
+  TextField,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableContainer,
+  Table,
+  Paper,
+} from "@material-ui/core";
+
 import { ProManageState } from '../../ProManageContext';
-import { Box } from '@material-ui/core';
 import { db } from '../../firebase';
 import { getDoc, doc } from "firebase/firestore";
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 17,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}));
 
 const columns = [
   { id: 'name', label: 'Name', minWidth: 80 },
@@ -48,23 +36,10 @@ const types = [
   {id: "entr", name: "Entrepreneurial or Student-Proposed Projects"}
 ];
 
-export default function StickyHeadTable() {
-  const { user, isAdmin, availIdeas, setAlert } = ProManageState();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  
-  
-  //console.log("available ideas: ", availIdeas);
-  
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+export default function AvailableIdeas() {
+  const { user, isAdmin, setAlert, availIdeas, loading } = ProManageState();
+  const [page, setPage] = useState(1);
+  const [searchValue, setSearchValue] = useState("");
 
   const handleSmartButton = async () => {
     const userRef = doc(db, "users", user.uid);
@@ -128,69 +103,109 @@ export default function StickyHeadTable() {
         }
   }
 
-  const handleSelectIdea = () => {
-    
+  const darkTheme = createTheme({
+    palette: {
+      primary: {
+        main: "#fff",
+      },
+      type: "dark",
+    },
+  });
+
+  const useStyles = makeStyles({
+    row: {
+      backgroundColor: "#16171a",
+      cursor: "pointer",
+      "&:hover": {
+        backgroundColor: "#131111",
+      },
+      fontFamily: "Montserrat",
+    },
+    pagination: {
+      "& .MuiPaginationItem-root": {
+        color: "gold",
+      },
+    },
+  });
+
+  const search = () => {
+    return availIdeas.filter (
+      (idea) => 
+        idea.name.toString().toLowerCase().includes(searchValue) ||
+        idea.type.toString().toLowerCase().includes(searchValue) 
+    );
   }
 
+  const classes = useStyles();
   return (
-    <Box sx={{ marginLeft: 180, marginRight: 180}}>
-      {isAdmin && ( <AddIdea /> )}
-      <br/>
-      <Paper variant='elevation24' sx={{ width: '100%', overflow: 'hidden' }}>
-        <TableContainer>
-          <Table stickyHeader aria-label="sticky table">
-
-            <TableHead style={{ backgroundColor: "#EEBC1D" }}>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{
-                      color: "black",
-                      fontWeight: "700",
-                      fontFamily: "Montserrat",
-                    }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            
-            <TableBody>
-              {availIdeas
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                  return (
-                    <StyledTableRow hover role="checkbox" tabIndex={-1} key={row.code} onClick={handleSelectIdea}>
-                      {columns.map((column) => {
-                        const value = row[column.id];
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === 'number' 
-                              ? column.format(value)
-                              : value}
-                          </TableCell>
-                        );
-                      })}
-                    </StyledTableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={availIdeas.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
+    <ThemeProvider theme={darkTheme}>
+      <Container style={{ textAlign: "center" }}>
+        <TextField
+          label="Search For an Idea.."
+          variant="outlined"
+          style={{ marginBottom: 20, width: "100%" }}
+          onChange={(e) => setSearchValue(e.target.value)}
         />
-        <Button onClick={handleSmartButton} variant="contained" color="primary">Smart</Button>
-      </Paper>
-    </Box>
+        <TableContainer component={Paper}>
+          {loading ? (
+            <LinearProgress style={{ backgroundColor: "gold" }} />
+          ) : (
+            <Table aria-label="simple table">
+              <TableHead style={{ backgroundColor: "#EEBC1D" }}>
+                <TableRow>
+                  {columns.map((column) => (
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{
+                        color: "black",
+                        fontWeight: "700",
+                        fontFamily: "Montserrat",
+                      }}
+                    >
+                      {column.label}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {search()
+                  .slice((page - 1) * 10, (page - 1) * 10 + 10)
+                  .map((row) => {
+                    return (
+                      <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                        {columns.map((column) => {
+                          const value = row[column.id];
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              {column.format && typeof value === 'number' 
+                                ? column.format(value)
+                                : value}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })}
+              </TableBody>
+            </Table>
+          )}
+        </TableContainer>
+        <Pagination
+          count={parseInt((search()?.length / 10).toFixed(0))}
+          style={{
+            padding: 20,
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+          classes={{ ul: classes.pagination }}
+          onChange={(_, value) => {
+            setPage(value);
+            window.scroll(0, 450);
+          }}
+        />
+      </Container>
+    </ThemeProvider>
   );
 }

@@ -21,14 +21,14 @@ const EventTracker = () => {
   const [tasks, setTasks] = useState([])
   const classes = useStyles();
 
-  useEffect(() => {
-    const getTasks = async () => {
-      const tasksFromServer = await fetchTasks()
-      setTasks(tasksFromServer)
-    }
+  // useEffect(() => {
+  //   const getTasks = async () => {
+  //     const tasksFromServer = await fetchTasks()
+  //     setTasks(tasksFromServer)
+  //   }
 
-    getTasks()
-  }, [])
+  //   getTasks()
+  // }, [])
 
   // Fetch Tasks
   const fetchTasks = async () => {

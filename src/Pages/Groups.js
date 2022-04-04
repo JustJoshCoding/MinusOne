@@ -283,4 +283,4 @@ export default function PrimarySearchAppBar() {
       <GroupCards groups={groups} search={search} />)}
     </Box>
   );
-}
+} 
