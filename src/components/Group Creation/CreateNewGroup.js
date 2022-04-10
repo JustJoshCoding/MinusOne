@@ -1,17 +1,14 @@
 import {
   Typography,
-  AppBar,
-  Toolbar,
-  TextField,
   Button,
-  Box
 } from "@material-ui/core";
+import TextField from '@mui/material/TextField';
 import { useState } from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
 import { db } from '../../firebase';
-import { addDoc, collection, updateDoc, doc } from "firebase/firestore";
+import { addDoc, collection, updateDoc, doc, arrayUnion } from "firebase/firestore";
 import { ProManageState } from '../../ProManageContext';
 import { useNavigate } from "react-router-dom";
 
@@ -90,7 +87,11 @@ export default function CreateNewGroup() {
       const groupRef = collection(db, "Groups" );
       const useRef = doc(db, "users", user.uid);
       try {
-      await Promise.all([ addDoc(groupRef, groupData), updateDoc(useRef, {groupName: groupName}) ]);
+      await Promise.all([ addDoc(groupRef, groupData), updateDoc(useRef, 
+        {
+        groupName: userInfo.groupName = groupName,
+        status: arrayUnion("Joined a Group")
+      }) ]);
       setAlert({
           open: true,
           message: `Successfully Created ${groupName}!`,

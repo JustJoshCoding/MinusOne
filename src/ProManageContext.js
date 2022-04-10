@@ -20,6 +20,9 @@ const ProManageContext = ({ children }) => {
   const [availIdeas, setAvailIdeas] = useState([]);
   const [groups, setGroups] = useState([]);
   const [groupInfo, setGroupInfo] = useState(null);
+  const [currentAccProps, setCurrentAccProps] = useState([]);
+  const [pendingProposals, setPendingProposals] = useState([]);
+
   const [userInfo, setUserInfo] = useState({
     ID: "",
     email: "",
@@ -33,8 +36,10 @@ const ProManageContext = ({ children }) => {
   // check if user is an admin and get user info
   const checkAdminStatus = async (newUser) => {
     const userRef = doc(db, "users", newUser?.uid);
+    setLoading(true);
     const userSnap = await getDoc(userRef);
     setUserInfo(userSnap.data())
+    setLoading(false);
     if (userSnap.data().isAdmin){
       setIsAdmin(true)
     }
@@ -53,7 +58,34 @@ const ProManageContext = ({ children }) => {
     //database references
     const ideaRef = collection(db, "Available Ideas");
     const groupRef = collection(db, "Groups");
- 
+    const ideaRef2 = collection(db, "Current Proposals");
+    const pendRef = collection(db, "Pending Proposals");
+    
+    // get pending proposals
+    const getPendingProposals = async  () => {
+      setLoading(true);
+      const data = await getDocs(pendRef);
+      if (data) {
+        setPendingProposals(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        setLoading(false);
+      }
+      else {
+        console.log("No proposals pending");
+      }
+    };
+
+    // get current accepted proposals
+    const getCurrAccepted = async  () => {
+      setLoading(true);
+      const data = await getDocs(ideaRef2);
+      if (data) {
+        setCurrentAccProps(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        setLoading(false);
+      }
+      else {
+        console.log("No accepted proposals");
+      }
+    };
     // get available ideas
     const getAvailIdeas = async  () => {
       setLoading(true);
@@ -79,7 +111,8 @@ const ProManageContext = ({ children }) => {
     
     getAvailIdeas();
     getGroups();
-    
+    getCurrAccepted();
+    getPendingProposals();
     
   }, [])
  
@@ -119,7 +152,9 @@ const ProManageContext = ({ children }) => {
         availIdeas,
         isAdmin,
         groupInfo,
-        loading
+        loading,
+        currentAccProps,
+        pendingProposals
       }}
     >
       {children}

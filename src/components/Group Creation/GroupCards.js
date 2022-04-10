@@ -88,15 +88,18 @@ export default function GroupCards( { groups, search } ) {
         const groupRef = doc(db, "Groups", docid);
         const uRef = doc(db, "users", user.uid);
         try {
-          await Promise.all([ updateDoc(groupRef, {groupMembers: arrayUnion(userInfo) }), updateDoc(uRef, {groupName: name}) ]);
+          await Promise.all([ updateDoc(groupRef, {groupMembers: arrayUnion(userInfo) }), updateDoc(uRef, {
+            groupName: userInfo.groupName = name,
+            status: arrayUnion("Joined a Group")
+          }) ]);
           setAlert({
             open: true,
             message: `Successfully Joined ${name}!`,
             type: "success",
           });
-        // update grpups array
-        groups[i].groupMembers.push(userInfo);
-        userInfo.groupName = name;
+          userInfo.status.push("Joined a Group")
+          // update grpups array
+          groups[i].groupMembers.push(userInfo);
         } catch (error) {
           setAlert({
             open: true,

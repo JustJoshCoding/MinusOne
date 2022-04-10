@@ -49,6 +49,7 @@ const AddIdea = () => {
     const [type, setType] = useState('');
     
     const addToAvailIdeas = async (e) => {
+        const ideaRef = collection(db, "Available Ideas");
         e.preventDefault()
         if (!name || !description || !type) {
             setAlert({
@@ -58,14 +59,16 @@ const AddIdea = () => {
             });
             return
         }
-        const ideaRef = collection(db, "Available Ideas");
         const newData = {name: name, description: description, type: type};
-        availIdeas.push(newData);
         try {
         await addDoc(
             ideaRef,
             newData
         );
+        availIdeas.push(newData);
+        setName("");
+        setDescription("");
+        setType("");
         setAlert({
             open: true,
             message: `${name} Added to the Available Ideas!`,
@@ -96,6 +99,7 @@ const AddIdea = () => {
                 <TextField 
                     id="ideaDescription"
                     value={description}
+                    multiline
                     label="Description"
                     variant="standard"
                     onChange={(e) => setDescription(e.target.value)}

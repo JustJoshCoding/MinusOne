@@ -109,7 +109,6 @@ export default function HorizontalNonLinearStepper({ handleClose }) {
     newCompleted[activeStep] = true;
     if (activeStep === 2){
       let tempArr = [];
-      console.log("test1")
       skills.map(i => {
         let temp = 0;
         confidence.map(j =>{
@@ -155,8 +154,15 @@ export default function HorizontalNonLinearStepper({ handleClose }) {
       const userRef = doc(db, "users", auth.currentUser.uid);
       await setDoc(
         userRef,
-        { ID: id, firstname: firstname, lastname: lastname, initials: (firstname[0] + lastname[0].toUpperCase()), email: email, skills: confidenceLevels, groupName: "", degree: degree},
-        { merge: true }
+        { ID: id,
+          firstname: firstname, 
+          lastname: lastname, 
+          initials: (firstname[0] + lastname[0].toUpperCase()), 
+          email: email, skills: confidenceLevels, 
+          groupName: "", 
+          degree: degree, 
+          status: ["No Group"]
+        }
       );
       setAlert({
         open: true,

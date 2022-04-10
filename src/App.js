@@ -1,5 +1,4 @@
 import { makeStyles } from "@material-ui/core";
-import Homepage from "./Pages/HomePage";
 import Groups from "./Pages/Groups";
 import GroupAdd from "./Pages/GroupAdd";
 import "./App.css";
@@ -13,6 +12,9 @@ import Dashboard from "./Pages/Dashboard";
 import MyGroupPage from "./Pages/MyGroupPage";
 import ViewGroupPage from "./Pages/ViewGroupPage";
 import ViewProfilePage from "./Pages/ViewProfilePage";
+import IdeaProposal from "./components/IdeaComponents/IdeaProposal";
+import SubmissionsPage from "./Pages/SubmissionsPage";
+import ViewProposal from "./components/IdeaComponents/ViewProposal"
 
 const useStyles = makeStyles(() => ({
   App: {
@@ -66,6 +68,18 @@ function App() {
           <Route
             path='/userprofile/:id'
             element={<ViewProfilePage/>}
+          />
+          <Route
+            path='/ideaproposal/:id'
+            element={<IdeaProposal/>}
+          />
+          <Route
+            path='/submission'
+            element={<SubmissionsPage/>}
+          />
+          <Route
+            path='/studentproposal/:id'
+            element={<ViewProposal/>}
           />
         </Routes>
       </div>

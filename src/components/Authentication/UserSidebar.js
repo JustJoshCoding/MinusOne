@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
-import { Avatar, Box, Button } from "@material-ui/core";
+import { Avatar, Button } from "@material-ui/core";
 import { ProManageState } from "../../ProManageContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
@@ -12,6 +12,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PersonIcon from '@mui/icons-material/Person';
 import GroupIcon from '@mui/icons-material/Group';
+import { Typography } from "@mui/material";
 
 const useStyles = makeStyles({
   container: {
@@ -43,7 +44,7 @@ export default function UserSidebar() {
   const [state, setState] = React.useState({
     right: false,
   });
-  const { user, setAlert } = ProManageState();
+  const { user, setAlert, userInfo } = ProManageState();
   const navigate = useNavigate();
 
   const toggleDrawer = (anchor, open) => (event) => {
@@ -127,7 +128,8 @@ export default function UserSidebar() {
                 </div>
                 <div>
                   <span style={{ fontSize: 15, textShadow: "0 0 5px black" }}>
-                    Watchlist
+                    {userInfo?.status &&
+                    <Typography>Status: {userInfo?.status[userInfo?.status.length-1]}</Typography>}
                   </span>
                 </div>
               </div>

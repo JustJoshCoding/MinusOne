@@ -5,28 +5,27 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import AddIcon from '@mui/icons-material/Add';
-import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
-import { Button } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-
 import {Container} from "@material-ui/core";
 
-
+// icons
 import EditIcon from '@mui/icons-material/Edit';
 import Divider from '@mui/material/Divider';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import AddIcon from '@mui/icons-material/Add';
+import MoreIcon from '@mui/icons-material/MoreVert';
+import LightbulbRoundedIcon from '@mui/icons-material/LightbulbRounded';
 
-
-
+// AddModal
+import { makeStyles } from "@material-ui/core/styles";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+import { Button } from "@material-ui/core";
 
 
 import { LinearProgress } from '@material-ui/core';
@@ -38,6 +37,21 @@ import PastAcceptedPropsals from '../components/IdeaComponents/PastAcceptedProps
 
 import { useNavigate  } from "react-router-dom";
 import { ProManageState } from '../ProManageContext';
+import AddIdea from '../components/IdeaComponents/AddIdea';
+
+const useStyles = makeStyles((theme) => ({
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    width: 700,
+    backgroundColor: theme.palette.background.paper,
+    color: "white",
+    borderRadius: 10,
+  }
+}));
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -82,30 +96,37 @@ const StyledMenu = styled((props) => (
 
 export default function IdeaPage() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorTab, setAnchorTab] = useState(null);
   const open = Boolean(anchorEl);
+  const tabOpen = Boolean(anchorTab);
+
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const { loading } = ProManageState();
+  const { loading, isAdmin } = ProManageState();
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [tab, setTab] = useState("Available Ideas");
-  const [anchorTab, setAnchorTab] = useState(null);
+  const [renderTab, setRenderTab] = useState(<AvailableIdeas />);
 
-  function chooseTab () {
+  const [openModal, setOpenModal] = useState(false);
+  const classes = useStyles();
 
+  function tabToCurrAccept () { 
+    setTab("Current Accepted Proposals");
+    setRenderTab(<CurrAccProposals/>);
   }
-  
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
 
-  };
+  function tabToPastAccepted () {
+    setTab("Past Accepted Proposals");
+    setRenderTab(<PastAcceptedPropsals/>);
+  }
+
+  function tabToAvailIdeas () {
+    setTab("Available Ideas");
+    setRenderTab(<AvailableIdeas/>);
+  }
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -116,12 +137,78 @@ export default function IdeaPage() {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleClickTab = (event) => {
+    setAnchorTab(event.currentTarget);
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleCloseTab = () => {
+    setAnchorTab(null);
+  };
   const navigate = useNavigate();
 
-  const menuId = 'primary-search-account-menu';
+  const handleAdd = () => {
+    setOpenModal(true);
+    handleClose();
+  }
+  
+  const renderAddModal  = (
+    <Modal
+      aria-labelledby="transition-modal-title"
+      aria-describedby="transition-modal-description"
+      className={classes.modal}
+      open={openModal}
+      onClose={()=> setOpenModal(false)}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+      BackdropProps={{
+        timeout: 500,
+      }}
+    >
+      <Fade in={openModal}>
+        <div className={classes.paper}>
+          <AppBar
+            position="static"
+            style={{
+              backgroundColor: "transparent",
+              color: "black",
+            }}
+          >
+            <Container style={{ textAlign: "center"}} >
+              <Typography fontSize={24} fontFamily='Montserrat'>Add Idea</Typography>
+            </Container>
+          </AppBar>
+          <AddIdea/>
+        </div>
+      </Fade>
+    </Modal>
+  )
+
+  const renderTabMenu = (
+    <StyledMenu
+      id='my-tab-menu'
+      MenuListProps={{
+        'aria-labelledby': 'demo-customized-button',
+      }}
+      anchorEl={anchorTab}
+      open={tabOpen}
+      onClose={handleCloseTab}
+    >
+      <MenuItem onClick={tabToAvailIdeas} >
+        Available Ideas
+      </MenuItem>
+      <MenuItem onClick={tabToCurrAccept} >
+        Current Accepted Proposals
+      </MenuItem>
+      <MenuItem onClick={tabToPastAccepted} >
+        Past Accepted Proposals
+      </MenuItem>
+    </StyledMenu>
+ );
+
   const renderMenu = (
     <StyledMenu
       id="demo-customized-menu"
@@ -129,16 +216,16 @@ export default function IdeaPage() {
         'aria-labelledby': 'demo-customized-button',
       }}
       anchorEl={anchorEl}
-      open={open}
+      open={isMenuOpen}
       onClose={handleClose}
     >
       <MenuItem onClick={handleClose} >
         <EditIcon />
         Edit
       </MenuItem>
-      <MenuItem onClick={handleClose} >
-        <FileCopyIcon />
-        Duplicate
+      <MenuItem onClick={handleAdd} >
+        <AddIcon />
+        Add
       </MenuItem>
       <Divider sx={{ my: 0.5 }} />
       <MenuItem onClick={handleClose} >
@@ -152,7 +239,6 @@ export default function IdeaPage() {
     </StyledMenu>
   );
 
-  const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
     <StyledMenu
     anchorEl={mobileMoreAnchorEl}
@@ -160,7 +246,7 @@ export default function IdeaPage() {
         vertical: 'top',
         horizontal: 'right',
       }}
-      id={mobileMenuId}
+      id='primary-search-account-menu-mobile'
       keepMounted
       transformOrigin={{
         vertical: 'top',
@@ -168,26 +254,24 @@ export default function IdeaPage() {
       }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
-
-      
       MenuListProps={{
         'aria-labelledby': 'demo-customized-button',
       }}
     >
-      <MenuItem onClick={handleClose} >
+      <MenuItem onClick={handleMobileMenuClose} >
         <EditIcon />
         Edit
       </MenuItem>
-      <MenuItem onClick={handleClose} >
+      <MenuItem onClick={handleAdd} >
         <FileCopyIcon />
-        Duplicate
+        Add
       </MenuItem>
       <Divider sx={{ my: 0.5 }} />
-      <MenuItem onClick={handleClose} >
+      <MenuItem onClick={handleMobileMenuClose} >
         <ArchiveIcon />
         Archive
       </MenuItem>
-      <MenuItem onClick={handleClose} >
+      <MenuItem onClick={handleMobileMenuClose} >
         <MoreHorizIcon />
         More
       </MenuItem>
@@ -195,78 +279,86 @@ export default function IdeaPage() {
   );
 
   return (
-    <Box sx={{ flexGrow: 1}}>
-      <AppBar position="static" color="transparent">
-        <Toolbar>
+    <Container style={{ textAlign: "center" }}>
+    <Toolbar>
+      <IconButton
+        size="large"
+        edge="start"
+        color="inherit"
+        aria-label="open drawer"
+        sx={{ mr: 2 }}
+      >
+        <LightbulbRoundedIcon />
+      </IconButton>
+      <Typography
+        variant="h6"
+        noWrap
+        component="div"            
+        color= "gold"
+        fontFamily= "Montserrat"
+        fontWeight= "bold"
+        sx={{ display: { xs: 'none', sm: 'block'} }}
+      >
+        Idea Development
+      </Typography>
+      <Box sx={{ flexGrow: 1 }} />
+    </Toolbar>
+    <Container style={{ textAlign: "center"}} >
+
+      <Typography
+        variant="h4"
+        style={{ margin: 18, fontFamily: "Montserrat" }}
+      >
+        {tab}
         <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
+          size='large' 
+          aria-controls={tabOpen ? 'my-tab-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={tabOpen ? 'true' : undefined}
+          style={{color: 'white'}}
+          onClick={handleClickTab}
+        > 
+          <ExpandMoreIcon/>
+        </IconButton>
+          {isAdmin && <Button
+            id="demo-customized-button"
+            style={{ float:'right',  width: 100,
+            height: 30,
+            marginLeft: 15,
+            backgroundColor: "#EEBC1D", }}
+            aria-controls={open ? 'demo-customized-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+            variant="contained"
+            disableElevation
+            onClick={handleClick}
+            endIcon={<ExpandMoreIcon />}
           >
-            <GroupsRoundedIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"            
-            color= "gold"
-            fontFamily= "Montserrat"
-            fontWeight= "bold"
-            sx={{ display: { xs: 'none', sm: 'block'} }}
-          >
-            Idea Development
-          </Typography>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <div>
-              <Button
-                id="demo-customized-button"
-                aria-controls={open ? 'demo-customized-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                variant="contained"
-                disableElevation
-                onClick={handleClick}
-                endIcon={<ExpandMoreIcon />}
-              >
-                Options
-              </Button>
-            </div>
-          </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' }, flex: 50 }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-              
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <Container style={{ textAlign: "center" }}>
-        <Typography
-          variant="h4"
-          style={{ margin: 18, fontFamily: "Montserrat" }}
-        >
-          {tab}
-          <IconButton size='large' style={{color: 'white'}} onClick={chooseTab}> 
-            <ExpandMoreIcon/>
-          </IconButton>
+            Options
+          </Button>}
         </Typography>
+        <Box sx={{ display: { xs: 'flex', md: 'none' }, flex: 50 }}>
+          <IconButton
+            size="large"
+            aria-label="show more"
+            aria-controls='primary-search-account-menu-mobile'
+            aria-haspopup="true"
+            onClick={handleMobileMenuOpen}
+            color="inherit"
+            
+          >
+            <MoreIcon />
+          </IconButton>
+        </Box>
+        {renderAddModal}
       </Container>
       {renderMobileMenu}
-      {renderMenu}
+      {isAdmin && renderMenu}
+      {renderTabMenu}
       {loading ? (
       <LinearProgress style={{ backgroundColor: "gold" }} />
       ) : (
-      <AvailableIdeas />)}
-    </Box>
+      renderTab)}
+    </Container>
   );
 } 

@@ -12,7 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
-import { TextField } from '@material-ui/core';
+import TextField from '@mui/material/TextField';
 import { Button } from '@material-ui/core';
 import { IconButton } from '@material-ui/core';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -176,37 +176,45 @@ export default function MyGroupPage() {
     }
 
     const handleSubmit = async () => {
-            const mygroup = groups.findIndex(group => group.id === groupInfo.id);
-            const groupData = {
-                Benefits: groups[mygroup].Benefits = benefits,
-                Duration: groups[mygroup].Duration = duration,
-                beneficiaries: groups[mygroup].beneficiaries = beneficiaries,
-                deliverables: groups[mygroup].deliverables = deliverables,
-                objectives: groups[mygroup].objectives = objectives,
-                projectScope: groups[mygroup].projectScope = projectScope,
-                pojectType: groups[mygroup].pojectType = type,
-                stakeHolders: groups[mygroup].stakeholders = stakeholders,
-                projectName: groups[mygroup].projectName = projectName,
-            };
-            
-            const groupRef = doc(db, "Groups", groupInfo.id);
-            try {
-                await updateDoc(groupRef, groupData)
-                setAlert({
+        if (!projectName || !type || !projectScope || !objectives || !description || !benefits || !beneficiaries || !stakeholders || !deliverables || !duration){
+            setAlert({
                 open: true,
-                message: 'Successfully Updated Group Information!',
-                type: "success",
-            });
-            } catch (error) {
-                setAlert({
-                open: true,
-                message: error.message,
+                message: "You need to fill all fields",
                 type: "error",
-            });
+                });
             return;
-            }
-            setEditMode(false);
-            handleClose();
+        }
+        const mygroup = groups.findIndex(group => group.id === groupInfo.id);
+        const groupData = {
+            Benefits: groups[mygroup].Benefits = benefits,
+            Duration: groups[mygroup].Duration = duration,
+            beneficiaries: groups[mygroup].beneficiaries = beneficiaries,
+            deliverables: groups[mygroup].deliverables = deliverables,
+            objectives: groups[mygroup].objectives = objectives,
+            projectScope: groups[mygroup].projectScope = projectScope,
+            pojectType: groups[mygroup].pojectType = type,
+            stakeHolders: groups[mygroup].stakeholders = stakeholders,
+            projectName: groups[mygroup].projectName = projectName,
+        };
+        
+        const groupRef = doc(db, "Groups", groupInfo.id);
+        try {
+            await updateDoc(groupRef, groupData)
+            setAlert({
+            open: true,
+            message: 'Successfully Updated Group Information!',
+            type: "success",
+        });
+        } catch (error) {
+            setAlert({
+            open: true,
+            message: error.message,
+            type: "error",
+        });
+        return;
+        }
+        setEditMode(false);
+        handleClose();
     };
 
     const handleSaveChanges = () => setOpen(true);
