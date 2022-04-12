@@ -19,6 +19,7 @@ const ProManageContext = ({ children }) => {
   const [availIdeas, setAvailIdeas] = useState([]);
   const [groups, setGroups] = useState([]);
   const [groupInfo, setGroupInfo] = useState(null);
+  const [timeline, setTimeline] = useState([]);
   const [userInfo, setUserInfo] = useState({
     ID: "",
     email: "",
@@ -73,12 +74,32 @@ const ProManageContext = ({ children }) => {
         console.log("No Groups Available");
       }
     };
-   
+
     getAvailIdeas();
     getGroups();
     
     
   }, [])
+
+  useEffect(() => {
+    
+    const timelineRef = collection(db, "Timeline");
+
+    const getTimeline = async  () => {
+      const data = await getDocs(timelineRef);
+      if (data) {
+        setTimeline(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      }
+      else {
+        console.log("No Timeline Available");
+      }
+    };
+    
+  
+    
+    getTimeline();
+  }, [])
+  
  
   // setting the user state to the user that is currently logged in or null if no user
   useEffect(() => {
@@ -115,7 +136,8 @@ const ProManageContext = ({ children }) => {
         setAvailIdeas,
         availIdeas,
         isAdmin,
-        groupInfo
+        groupInfo,
+        timeline
       }}
     >
       {children}

@@ -14,6 +14,8 @@ import Submission from "./Pages/Submission.tsx";
 import MyGroupPage from "./Pages/MyGroupPage";
 import ViewGroupPage from "./Pages/ViewGroupPage";
 import ViewProfilePage from "./Pages/ViewProfilePage";
+import TimelineAdd from "./Pages/TimelineAdd";
+import Dropzone from "./components/SubmissionBox2/Dropzone";
 
 const useStyles = makeStyles(() => ({
   App: {
@@ -71,6 +73,10 @@ function App() {
           <Route
             path='/userprofile/:id'
             element={<ViewProfilePage/>}
+          />
+          <Route
+            path='/timelineadd'
+            element={<TimelineAdd/>}
           />
         </Routes>
       </div>

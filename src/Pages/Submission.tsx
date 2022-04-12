@@ -34,7 +34,7 @@ export default function Home() {
                     disabled={!isValid || isSubmitting}
                     type="submit"
                   >
-                    Submit
+                    Upload
                   </Button>
                 </Grid>
               </Grid>

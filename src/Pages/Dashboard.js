@@ -13,6 +13,7 @@ import StaticDateRangePicker from '@mui/lab/StaticDateRangePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import EventTracker from '../components/Dashboard/ShowEventTracker/EventTracker';
+import Timeline from '../components/Dashboard/ShowEventTracker/Timeline/Timeline'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -58,6 +59,7 @@ export default function Dashboard() {
             <CardContent>
                 <Typography variant='h5' color="text.primary">
                     My Timeline
+                    <Timeline/>
                 </Typography>
             </CardContent>
         </React.Fragment>
@@ -69,10 +71,10 @@ export default function Dashboard() {
                 <Grid item xs={5} >
                     <Item>{showUpcommingEvents}</Item>
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={5} md={7} >
                     <Item>{showCalendar}</Item>
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={10}>
                     <Item>{showTimeline}</Item>
                 </Grid>
             </Grid>
