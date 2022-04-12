@@ -11,14 +11,13 @@ import Typography from '@mui/material/Typography';
 import CardHeader from '@mui/material/CardHeader';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
-import { IconButton, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import { Button, Modal } from '@mui/material';
 import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 
 import { db } from '../../firebase';
 import { ProManageState } from '../../ProManageContext';
-import { Search } from '@mui/icons-material';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -26,17 +25,6 @@ const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   textAlign: 'center',
   color: theme.palette.text.secondary,
-}));
-
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
 }));
 
 const style = {
@@ -168,7 +156,7 @@ export default function GroupCards( { groups, search } ) {
                                   <Avatar
                                     sx={{ bgcolor: 'gold', color: 'black' }} 
                                     alt={`${member.firstname} ${member.lastname}`} 
-                                    src={member.img}
+                                    src={member.image}
                                     onClick={() => handleGoToUserProfile(member.ID)}
                                     >
                                       {member.initials}

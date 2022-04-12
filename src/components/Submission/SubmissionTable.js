@@ -115,49 +115,52 @@ const SubmissionTable = () => {
                     <LinearProgress style={{ backgroundColor: "gold" }} />
                     ) : (
                     <Table aria-label="simple table">
-                    <TableHead style={{ backgroundColor: "#EEBC1D" }}>
-                        <TableRow>
-                        {columns.map((column) => (
-                            <TableCell
-                            key={column.id}
-                            align={column.align}
-                            style={{
-                                color: "black",
-                                fontWeight: "700",
-                                fontFamily: "Montserrat",
-                            }}
-                            >
-                            {column.label}
-                            </TableCell>
-                        ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {search()
-                        .slice((page - 1) * 10, (page - 1) * 10 + 10)
-                        .map((row) => {
-                            return (
-                            <TableRow
-                                className={classes.row}
-                                tabIndex={-1} 
-                                key={row.code}
-                                onClick={() => navigate(`/studentproposal/${row.id}`)}
-                            >
-                                {columns.map((column) => {
-                                const value = row[column.id];
-                                return (
-                                    <TableCell key={column.id} align={column.align}>
-                                    {column.format && typeof value === 'number' 
-                                        ? column.format(value)
-                                        : value}
-                                    </TableCell>
-                                );
-                                })}
-                                
+                        <TableHead style={{ backgroundColor: "#EEBC1D" }}>
+                            <TableRow>
+                            {columns.map((column) => (
+                                <TableCell
+                                key={column.id}
+                                align={column.align}
+                                style={{
+                                    color: "black",
+                                    fontWeight: "700",
+                                    fontFamily: "Montserrat",
+                                }}
+                                >
+                                {column.label}
+                                </TableCell>
+                            ))}
                             </TableRow>
-                            );
-                        })}
-                    </TableBody>
+                        </TableHead>
+                        {pendingProposals.length > 0 ? 
+                        <TableBody>
+                            {search()
+                            .slice((page - 1) * 10, (page - 1) * 10 + 10)
+                            .map((row) => {
+                                return (
+                                <TableRow
+                                    className={classes.row}
+                                    tabIndex={-1} 
+                                    key={row.code}
+                                    onClick={() => navigate(`/studentproposal/${row.id}`)}
+                                >
+                                    {columns.map((column) => {
+                                    const value = row[column.id];
+                                    return (
+                                        <TableCell key={column.id} align={column.align}>
+                                        {column.format && typeof value === 'number' 
+                                            ? column.format(value)
+                                            : value}
+                                        </TableCell>
+                                    );
+                                    })}
+                                    
+                                </TableRow>
+                                );
+                            })}
+                        </TableBody>:
+                        <h2>No Pending Proposals</h2>
+                        }
                     </Table>
                     )}
                 </TableContainer>

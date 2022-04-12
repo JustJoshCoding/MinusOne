@@ -1,6 +1,6 @@
 import { Typography } from '@material-ui/core'
 import { useState, useEffect } from 'react';
-import { Box } from "@material-ui/core";
+import { Container } from "@material-ui/core";
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid';
 import CardContent from '@mui/material/CardContent';
@@ -26,7 +26,7 @@ const ProfilePage = () => {
     const fetchUserProfile = async () => {
         const usersRef = collection(db, "users");
         const usersSnap = await getDocs(usersRef);
-        usersSnap.docs.map((doc) => {
+        usersSnap.docs.forEach((doc) => {
             if (doc.data().ID === id){
                 setUserInfo(doc.data());
                 return;
@@ -36,11 +36,11 @@ const ProfilePage = () => {
 
     useEffect(() => {
         fetchUserProfile();
-      }, [userInfo])
+      })
 
     return (
-        <Box sx={{ flexGrow: 1, margin: 180, paddingTop: '50px'}}>
-            <Grid container direction="column" spacing={2}>
+        <Container style={{ textAlign: "left" }}> 
+            <Grid container direction="column" spacing={2} p={4}>
                 <Grid item xs={8} sx={{ alignContent: 'center', alignItems: 'center'}}>
                     <Card>
                         <CardHeader
@@ -90,7 +90,7 @@ const ProfilePage = () => {
                     </Card>
                 </Grid>
             </Grid>
-        </Box>
+        </Container>
     )
 }
 

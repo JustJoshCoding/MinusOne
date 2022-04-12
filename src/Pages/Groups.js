@@ -94,16 +94,13 @@ export default function PrimarySearchAppBar() {
   }, [])
 
   const search = () => {
+    
     return groups.filter (
       (group) => 
         group.groupName.toString().toLowerCase().includes(searchValue) ||
         group.projectName.toString().toLowerCase().includes(searchValue) ||
-        group.groupMembers.find((member) => {
-          if (`${member.firstname.toString().toLowerCase()} ${member.lastname.toString().toLowerCase()}`.includes(searchValue)) return group;
-        }) ||
-        group.groupMembers.find((member) => {
-          if (member['ID'].toString().toLowerCase().includes(searchValue)) return group;
-        })
+        group.groupMembers.find((member) => (`${member.firstname.toString().toLowerCase()} ${member.lastname.toString().toLowerCase()}`.includes(searchValue))) ||
+        group.groupMembers.find((member) => member['ID'].toString().toLowerCase().includes(searchValue))
     ); 
   }
 

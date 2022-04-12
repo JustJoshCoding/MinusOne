@@ -114,9 +114,10 @@ function Header() {
             <MenuItem onClick={handleCloseNavMenu}>
               <Typography textAlign="right" onClick={() => navigate(`/${pages[2]}`)}>{pages[2]}</Typography>
             </MenuItem>
+            {isAdmin && 
             <MenuItem onClick={handleCloseNavMenu}>
-              {isAdmin && <Typography textAlign="right" onClick={() => navigate(`/${pages[3]}`)}>{pages[3]}</Typography>}
-            </MenuItem>
+              <Typography textAlign="right" onClick={() => navigate(`/${pages[3]}`)}>{pages[3]}</Typography>
+            </MenuItem>}
             <MenuItem onClick={handleCloseNavMenu}>
               <Typography textAlign="right" onClick={() => navigate(`/${pages[4]}`)}>{pages[4]}</Typography>
             </MenuItem>

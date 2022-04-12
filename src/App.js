@@ -14,7 +14,8 @@ import ViewGroupPage from "./Pages/ViewGroupPage";
 import ViewProfilePage from "./Pages/ViewProfilePage";
 import IdeaProposal from "./components/IdeaComponents/IdeaProposal";
 import SubmissionsPage from "./Pages/SubmissionsPage";
-import ViewProposal from "./components/IdeaComponents/ViewProposal"
+import ViewProposal from "./components/Submission/ViewProposal";
+import StudentsPage from "./Pages/StudentsPage";
 
 const useStyles = makeStyles(() => ({
   App: {
@@ -80,6 +81,10 @@ function App() {
           <Route
             path='/studentproposal/:id'
             element={<ViewProposal/>}
+          />
+          <Route
+            path='/students'
+            element={<StudentsPage/>}
           />
         </Routes>
       </div>

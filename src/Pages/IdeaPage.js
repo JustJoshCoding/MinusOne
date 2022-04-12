@@ -1,4 +1,4 @@
-import React, { useEffect, useState }  from 'react';
+import React, { useState }  from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -32,10 +32,8 @@ import { LinearProgress } from '@material-ui/core';
 
 import AvailableIdeas from '../components/IdeaComponents/AvailableIdeas';
 import CurrAccProposals from '../components/IdeaComponents/CurrAccProposals';
-import PastAcceptedPropsals from '../components/IdeaComponents/PastAcceptedPropsals';
+import CreateProposal from '../components/IdeaComponents/CreateProposal';
 
-
-import { useNavigate  } from "react-router-dom";
 import { ProManageState } from '../ProManageContext';
 import AddIdea from '../components/IdeaComponents/AddIdea';
 
@@ -115,9 +113,9 @@ export default function IdeaPage() {
     setRenderTab(<CurrAccProposals/>);
   }
 
-  function tabToPastAccepted () {
-    setTab("Past Accepted Proposals");
-    setRenderTab(<PastAcceptedPropsals/>);
+  function tabToCreateProposal () {
+    setTab("Create and Submit Proposal");
+    setRenderTab(<CreateProposal/>);
   }
 
   function tabToAvailIdeas () {
@@ -148,7 +146,6 @@ export default function IdeaPage() {
   const handleCloseTab = () => {
     setAnchorTab(null);
   };
-  const navigate = useNavigate();
 
   const handleAdd = () => {
     setOpenModal(true);
@@ -185,7 +182,7 @@ export default function IdeaPage() {
         </div>
       </Fade>
     </Modal>
-  )
+  );
 
   const renderTabMenu = (
     <StyledMenu
@@ -203,8 +200,8 @@ export default function IdeaPage() {
       <MenuItem onClick={tabToCurrAccept} >
         Current Accepted Proposals
       </MenuItem>
-      <MenuItem onClick={tabToPastAccepted} >
-        Past Accepted Proposals
+      <MenuItem onClick={tabToCreateProposal} >
+        Create and Submit proposal
       </MenuItem>
     </StyledMenu>
  );
@@ -337,7 +334,7 @@ export default function IdeaPage() {
             Options
           </Button>}
         </Typography>
-        <Box sx={{ display: { xs: 'flex', md: 'none' }, flex: 50 }}>
+        {isAdmin && <Box sx={{ display: { xs: 'flex', md: 'none' }, flex: 50 }}>
           <IconButton
             size="large"
             aria-label="show more"
@@ -349,7 +346,7 @@ export default function IdeaPage() {
           >
             <MoreIcon />
           </IconButton>
-        </Box>
+        </Box>}
         {renderAddModal}
       </Container>
       {renderMobileMenu}

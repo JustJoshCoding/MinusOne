@@ -20,7 +20,6 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { yellow } from '@mui/material/colors';
 
 
 const steps = ['User Credentials', 'My Skills', 'Skill Confidence Levels', 'Degree Type'];
@@ -31,7 +30,7 @@ export default function HorizontalNonLinearStepper({ handleClose }) {
   const [completed, setCompleted] = React.useState({});
   const [confidenceLevels, setConfidenceLevels] = React.useState([]);
   const [degree, setDegree] = React.useState("");
-  const { setAlert, user } = ProManageState();
+  const { setAlert } = ProManageState();
   
 
   const totalSteps = () => {
@@ -109,9 +108,9 @@ export default function HorizontalNonLinearStepper({ handleClose }) {
     newCompleted[activeStep] = true;
     if (activeStep === 2){
       let tempArr = [];
-      skills.map(i => {
+      skills.forEach(i => {
         let temp = 0;
-        confidence.map(j =>{
+        confidence.forEach(j =>{
           if (i === j.skill && j.confidence > temp)
             temp = j.confidence
         })

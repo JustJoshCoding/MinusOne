@@ -22,6 +22,7 @@ const ProManageContext = ({ children }) => {
   const [groupInfo, setGroupInfo] = useState(null);
   const [currentAccProps, setCurrentAccProps] = useState([]);
   const [pendingProposals, setPendingProposals] = useState([]);
+  const [students, setStudents] = useState([]);
 
   const [userInfo, setUserInfo] = useState({
     ID: "",
@@ -60,7 +61,21 @@ const ProManageContext = ({ children }) => {
     const groupRef = collection(db, "Groups");
     const ideaRef2 = collection(db, "Current Proposals");
     const pendRef = collection(db, "Pending Proposals");
-    
+    const studsRef = collection(db, "users");
+
+    // get all current students proposals
+    const getAllStudentAccounts = async  () => {
+      setLoading(true);
+      const data = await getDocs(studsRef);
+      if (data) {
+        setStudents(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        setLoading(false);
+      }
+      else {
+        console.log("No proposals pending");
+      }
+    };
+
     // get pending proposals
     const getPendingProposals = async  () => {
       setLoading(true);
@@ -113,7 +128,7 @@ const ProManageContext = ({ children }) => {
     getGroups();
     getCurrAccepted();
     getPendingProposals();
-    
+    getAllStudentAccounts();
   }, [])
  
   // setting the user state to the user that is currently logged in or null if no user
@@ -154,7 +169,8 @@ const ProManageContext = ({ children }) => {
         groupInfo,
         loading,
         currentAccProps,
-        pendingProposals
+        pendingProposals,
+        students
       }}
     >
       {children}

@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   paper: {
-    width: 700,
+    width: 1000,
     backgroundColor: theme.palette.background.paper,
     color: "black",
     borderRadius: 10,
@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     marginBottom: 25,
-    border: "2px solid grey",
+    borderRight: "2px solid grey",
   },
   heading: {
       fontWeight: "bold",
@@ -125,7 +125,7 @@ export default function ViewProposal() {
 
   useEffect(() => {
     fetchProposal();
-    }, [])
+    })
 
   const handleAccept = async () => {
 
@@ -238,42 +238,45 @@ export default function ViewProposal() {
           
             <div className={classes.sidebar}>
               {viewIdea && <div>
-                <LightbulbRoundedIcon style={{ color: 'gold', height: 100, width: 100 }}/>
-                    
-                <Typography variant='h3' className={classes.heading}>
-                    {proposal?.idea.name}
-                </Typography>
-                <Typography variant="subtitle1" className={classes.description}>
-                {proposal?.idea.description}
-                </Typography>
-                <Typography variant="h5" className={classes.heading}>
-                    Project Type:
-                </Typography>
-                &nbsp; &nbsp;
-                <Typography
-                    variant="h5"
+                {proposal?.idea !== "Student-Proposed" ? <div>
+                  <LightbulbRoundedIcon style={{ color: 'gold', height: 100, width: 100 }}/>
+                      
+                  <Typography variant='h3' className={classes.heading}>
+                      {proposal?.idea.name}
+                  </Typography>
+                  <Typography variant="subtitle1" className={classes.description}>
+                  {proposal?.idea.description}
+                  </Typography>
+                  <Typography variant="h5" className={classes.heading}>
+                      Project Type:
+                  </Typography>
+                  &nbsp; &nbsp;
+                  <Typography
+                      variant="h5"
+                      style={{
+                          fontFamily: "Montserrat",
+                      }}
+                      >
+                      {proposal?.idea.type}
+                  </Typography>
+                  &nbsp; &nbsp;
+                  <Typography style={{padding: 20 }}>Do you want to add this idea back to the list of Available ideas?</Typography>
+                  
+                  <Button
+                    variant="contained"
                     style={{
-                        fontFamily: "Montserrat",
+                    width: 85,
+                    height: 40,
+                    marginLeft: 15,
+                    color: "black",
+                    backgroundColor: "#EEBC1D",
                     }}
-                    >
-                    {proposal?.idea.type}
-                </Typography>
-                &nbsp; &nbsp;
-                <Typography style={{padding: 20 }}>Do you want to add this idea back to the list of Available ideas?</Typography>
-                
-                <Button
-                  variant="contained"
-                  style={{
-                  width: 85,
-                  height: 40,
-                  marginLeft: 15,
-                  color: "black",
-                  backgroundColor: "#EEBC1D",
-                  }}
-                  onClick = {handleAddtoAvail}
-                >
-                  Add 
-                </Button>
+                    onClick = {handleAddtoAvail}
+                  >
+                    Add 
+                  </Button>
+                </div>: <Typography variant='h4'>Student-Proposed Project</Typography>
+                }
               </div>
               }
 

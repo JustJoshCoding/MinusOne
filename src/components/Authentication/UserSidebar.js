@@ -23,6 +23,13 @@ const useStyles = makeStyles({
     flexDirection: "column",
     fontFamily: "monospace",
   },
+  picture: {
+    width: 200,
+    height: 200,
+    cursor: "pointer",
+    backgroundColor: "#EEBC1D",
+    objectFit: "contain",
+  },
   profile: {
     flex: 1,
     display: "flex",
@@ -76,14 +83,14 @@ export default function UserSidebar() {
           <Avatar
             onClick={toggleDrawer(anchor, true)}
             style={{
-              height: 38,
-              width: 38,
+              height: 50,
+              width: 50,
               marginLeft: 15,
               cursor: "pointer",
               backgroundColor: "#EEBC1D",
             }}
-            src={user.photoURL}
-            alt={user.displayName || user.email}
+            src={userInfo?.image}
+            alt={user.email}
           />
           <Drawer
             anchor={anchor}
@@ -94,8 +101,8 @@ export default function UserSidebar() {
               <div className={classes.profile}>
                 <Avatar
                   className={classes.picture}
-                  src={user.photoURL}
-                  alt={user.displayName || user.email}
+                  src={userInfo?.image}
+                  alt={user.email}
                 />
                 <span
                   style={{

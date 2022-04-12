@@ -8,7 +8,6 @@ import {
   TableCell,
   LinearProgress,
   ThemeProvider,
-  Typography,
   TextField,
   TableBody,
   TableRow,
@@ -19,20 +18,11 @@ import {
 } from "@material-ui/core";
 
 import { ProManageState } from '../../ProManageContext';
-import { db } from '../../firebase';
-import { getDoc, doc } from "firebase/firestore";
 
 const columns = [
   { id: 'projectName', label: 'Name', minWidth: 80 },
   { id: 'description', label: 'Description', align: 'left', minWidth: 80 },
   { id: 'projectType', label: 'Type', align: 'left', minWidth: 49 },
-];
-
-const types = [
-  {id: "tech", name: "Technical Computer Science or Information Technology Projects"},
-  {id: "busi", name: "Business-Oriented Computer Science or Information Technology Projects"},
-  {id: "reser", name: "Research Projects"},
-  {id: "entr", name: "Entrepreneurial or Student-Proposed Projects"}
 ];
 
 export default function AvailableIdeas() {

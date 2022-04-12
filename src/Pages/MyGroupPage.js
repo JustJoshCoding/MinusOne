@@ -13,7 +13,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 import TextField from '@mui/material/TextField';
-import { Button } from '@material-ui/core';
+import { Button, Container } from '@material-ui/core';
 import { IconButton } from '@material-ui/core';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
@@ -226,530 +226,532 @@ export default function MyGroupPage() {
 
     return (
         <ThemeProvider theme={theme}>
-            {userInfo.groupName !== "" ? <Box sx={{ m: 10}}>
-                {!editMode ? 
-                <Card>
-                    <CardHeader
-                        sx={{ bgcolor: 'primary.main', color: 'white'}}
-                        title={<Typography variant='h4'>{groupInfo.groupName}</Typography>}
-                        avatar = {<EditIcon style={{ cursor: "pointer"}} fontSize="large" onClick={() => setEditMode(true)}/>}
-                    />
-                    <CardMedia
-                        component="img"
-                        height={500}
-                        alt="green iguana"
-                        image="https://cdn.memiah.co.uk/blog/wp-content/uploads/counselling-directory.org.uk/2019/04/shutterstock_1464234134-1024x684.jpg"
-                    />
-                    <CardContent>
-                        <Typography
-                            variant='h4'
-                        >
-                            Project Name:
-                        </Typography>
-                        <br/>
-                        {groupInfo.projectName !== "" ? 
-                        <Typography
-                            variant='body1'
-                            sx={{marginLeft: 10}}
-                        >
-                            {groupInfo.projectName}
-                        </Typography>
-                        :
-                        <Typography
-                            variant='body1'
-                            sx={{marginLeft: 10}}
-                        >
-                        None
-                        </Typography>}
-                        <br/><br/>
-                        <Typography
-                            variant='h4'
-                        >
-                            Group Members:
-                        </Typography>
-                        {groupInfo.groupMembers ? 
-                        <List>
-                            {groupInfo.groupMembers.map(obj => {
-                                return (
-                                <ListItem style={{ marginLeft: 60, width:'800px' }}>
-                                    <ListItemIcon>
-                                        <PersonIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary={`${obj.firstname} ${obj.lastname}`} />
-                                </ListItem >
-                            )})}
-                        </List>
-                        :
-                        <Typography
-                            variant='body1'
-                            sx={{marginLeft: 10}}
-                        >
-                        None
-                        </Typography>}
-                        <Typography
-                            variant='h4'
-                        >
-                            Project Type:
-                        </Typography>
-                        <br/>
-                        {groupInfo.projectType !== "" ? 
-                        <Typography
-                            variant='body1'
-                            sx={{marginLeft: 10}}
-                        >
-                            {groupInfo.projectType}
-                        </Typography>
-                        :
-                        <Typography
-                            variant='body1'
-                            sx={{marginLeft: 10}}
-                        >
-                        None
-                        </Typography>}
-                        <br/><br/>
-                        <Typography
-                            variant='h4'
-                        >
-                            Project Scope:
-                        </Typography>
-                        <br/>
-                        {groupInfo.projectScope !== "" ? 
-                        <Typography
-                            variant='body1'
-                            sx={{marginLeft: 10}}
-                            width='800px'
-                        >
-                            {groupInfo.projectScope}
-                        </Typography>
-                        :
-                        <Typography
-                            variant='body1'
-                            sx={{marginLeft: 10}}
-                        >
-                        None
-                        </Typography>}
-                        <br/><br/>
-                        <Typography
-                            variant='h4'
-                        >
-                            Objectives:
-                        </Typography>
-                        <br/>
-                        {(groupInfo.objectives.length !== 0 && groupInfo.objectives[0].Objective !== "" ) ? 
-                        <List>
-                            {groupInfo.objectives.map(obj => {
-                                return (
-                                <ListItem style={{ marginLeft: 60, width:'800px' }}>
-                                    <ListItemIcon>
-                                        <StarIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary={obj} />
-                                </ListItem >
-                            )})}
-                        </List>
-                        :
-                        <Typography
-                            variant='body1'
-                            sx={{ marginLeft: 10}}
-                        >
-                        None
-                        </Typography>}
-                        <br/>
-                        <Typography
-                            variant='h4'
-                        >
-                            Description:
-                        </Typography>
-                        <br/>
-                        {groupInfo.description !== "" ? 
-                        <Typography
-                            variant='body1'
-                            sx={{marginLeft: 10}}
-                            width='800px'
-                        >
-                            {groupInfo.description}
-                        </Typography>
-                        :
-                        <Typography
-                            variant='body1'
-                            sx={{marginLeft: 10}}
-                        >
-                        None
-                        </Typography>}
-                        <br/><br/>
-                        <Typography
-                            variant='h4'
-                        >
-                            Benefits:
-                        </Typography>
-                        <br/>
-                        {(groupInfo.Benefits.length !== 0 && groupInfo.Benefits[0].Benefit !== "") ? 
-                        <List>
-                            {groupInfo.Benefits.map(obj => {
-                                return (
-                                <ListItem style={{ marginLeft: 60, width:'800px' }}>
-                                    <ListItemIcon>
-                                        <StarIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary={obj} />
-                                </ListItem >
-                            )})}
-                        </List>
-                        :
-                        <Typography
-                            variant='body1'
-                            sx={{ marginLeft: 10}}
-                        >
-                        None
-                        </Typography>}
-                        <br/>
-                        <Typography
-                            variant='h4'
-                        >
-                            Beneficiaries:
-                        </Typography>
-                        <br/>
-                        {(groupInfo.beneficiaries.length !== 0 && groupInfo.beneficiaries[0].Beneficiary !== "") ? 
-                        <List>
-                            {groupInfo.beneficiaries.map(obj => {
-                                return (
-                                <ListItem style={{ marginLeft: 60 }}>
-                                    <ListItemIcon>
-                                        <StarIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary={obj} />
-                                </ListItem >
-                            )})}
-                        </List>
-                        :
-                        <Typography
-                            variant='body1'
-                            sx={{marginLeft: 10}}
-                        >
-                        None
-                        </Typography>}
-                        <br/>
-                        <Typography
-                            variant='h4'
-                        >
-                            Stakeholders:
-                        </Typography>
-                        <br/>
-                        {(groupInfo.stakeHolders.length !== 0 && groupInfo.stakeHolders[0].Stakeholder !== "") ? 
-                        <List>
-                            {groupInfo.stakeHolders.map(obj => {
-                                return (
-                                <ListItem style={{ marginLeft: 60 }}>
-                                    <ListItemIcon>
-                                        <StarIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary={obj} />
-                                </ListItem >
-                            )})}
-                        </List>
-                        :
-                        <Typography
-                            variant='body1'
-                            sx={{marginLeft: 10}}
-                        >
-                        None
-                        </Typography>}
-                        <br/>
-                        <Typography
-                            variant='h4'
-                        >
-                            Deliverables:
-                        </Typography>
-                        <br/>
-                        {(groupInfo.deliverables.length !== 0 && groupInfo.deliverables[0].Deliverable !== "" ) ? 
-                        <List>
-                            {groupInfo.deliverables.map(obj => {
-                                return (
-                                <ListItem style={{ marginLeft: 60 }}>
-                                    <ListItemIcon>
-                                        <StarIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary={obj} />
-                                </ListItem >
-                            )})}
-                        </List>
-                        :
-                        <Typography
-                            variant='body1'
-                            sx={{marginLeft: 10}}
-                        >
-                        None
-                        </Typography>}
-                        <br/>
-                        <Typography
-                            variant='h4'
-                        >
-                            Estimated Project Duration:
-                        </Typography>
-                        <br/>
-                        {groupInfo.duration !== -1 ? 
-                        <Typography
-                            variant='body1'
-                            sx={{marginLeft: 10}}
-                        >
-                            {`${groupInfo.Duration} weeks`}
-                        </Typography>
-                        :
-                        <Typography
-                            variant='body1'
-                            sx={{marginLeft: 10}}
-                        >
-                        None
-                        </Typography>}
-                    </CardContent>
-                    
-                </Card>
-                :
-                <Card>
-                    <CardHeader
-                        sx={{ bgcolor: 'primary.main', color: 'white'}}
-                        title={<Typography variant='h4'>{groupInfo.groupName}</Typography>}
-                        
-                    />
-                    
-                    <CardContent>
-                        <Typography variant='h4'>Project Name:</Typography>
-                        <br/>
-                        <TextField
-                            variant="filled"
-                            type="text"
-                            label="Project Name"
-                            value={projectName}
-                            onChange={(e) => setProjectName(e.target.value)}
-                            style={{width: 400, marginLeft: 40, marginTop: 5}}
+             <Container style={{ textAlign: "left" }}>
+                {userInfo?.groupName !== "" ? <Box sx={{ m: 10}}>
+                    {!editMode ? 
+                    <Card>
+                        <CardHeader
+                            sx={{ bgcolor: 'primary.main', color: 'white'}}
+                            title={<Typography variant='h4'>{groupInfo?.groupName}</Typography>}
+                            avatar = {<EditIcon style={{ cursor: "pointer"}} fontSize="large" onClick={() => setEditMode(true)}/>}
                         />
-                        <br/><br/>
-                        <Typography variant='h4'>Project Type:</Typography>
-                        <br/>
-                        <FormControl variant="filled" sx={{width: 250, marginLeft: 5}}>
-                            <InputLabel >Project Type</InputLabel>
-                            <Select
-                            value={type}
-                            onChange={(e)=> setType(e.target.value)}
+                        <CardMedia
+                            component="img"
+                            height={500}
+                            alt="green iguana"
+                            image="https://cdn.memiah.co.uk/blog/wp-content/uploads/counselling-directory.org.uk/2019/04/shutterstock_1464234134-1024x684.jpg"
+                        />
+                        <CardContent>
+                            <Typography
+                                variant='h4'
                             >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            <MenuItem value="Technical">Technical</MenuItem>
-                            <MenuItem value="Business">Business</MenuItem>
-                            <MenuItem value="Research">Research</MenuItem>
-                            <MenuItem value="Entrepreneurial">Entrepreneurial</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <br/><br/>
-                        <Typography variant='h4'>Project Scope:</Typography>
-                        <br/>
-                        <TextField
-                            variant="filled"
-                            type="text"
-                            label="Project Scope"
-                            value={projectScope}
-                            multiline
-                            onChange={(e) => setProjectScope(e.target.value)}
-                            style={{width: 800, marginLeft: 40, marginTop: 5}}
+                                Project Name:
+                            </Typography>
+                            <br/>
+                            {groupInfo?.projectName !== "" ? 
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                            >
+                                {groupInfo?.projectName}
+                            </Typography>
+                            :
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                            >
+                            None
+                            </Typography>}
+                            <br/><br/>
+                            <Typography
+                                variant='h4'
+                            >
+                                Group Members:
+                            </Typography>
+                            {groupInfo?.groupMembers ? 
+                            <List>
+                                {groupInfo?.groupMembers.map(obj => {
+                                    return (
+                                    <ListItem style={{ marginLeft: 60, width:'800px' }}>
+                                        <ListItemIcon>
+                                            <PersonIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={`${obj.firstname} ${obj.lastname}`} />
+                                    </ListItem >
+                                )})}
+                            </List>
+                            :
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                            >
+                            None
+                            </Typography>}
+                            <Typography
+                                variant='h4'
+                            >
+                                Project Type:
+                            </Typography>
+                            <br/>
+                            {groupInfo?.projectType !== "" ? 
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                            >
+                                {groupInfo?.projectType}
+                            </Typography>
+                            :
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                            >
+                            None
+                            </Typography>}
+                            <br/><br/>
+                            <Typography
+                                variant='h4'
+                            >
+                                Project Scope:
+                            </Typography>
+                            <br/>
+                            {groupInfo?.projectScope !== "" ? 
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                                width='800px'
+                            >
+                                {groupInfo?.projectScope}
+                            </Typography>
+                            :
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                            >
+                            None
+                            </Typography>}
+                            <br/><br/>
+                            <Typography
+                                variant='h4'
+                            >
+                                Objectives:
+                            </Typography>
+                            <br/>
+                            {(groupInfo?.objectives.length !== 0 && groupInfo?.objectives[0].Objective !== "" ) ? 
+                            <List>
+                                {groupInfo?.objectives.map(obj => {
+                                    return (
+                                    <ListItem style={{ marginLeft: 60, width:'800px' }}>
+                                        <ListItemIcon>
+                                            <StarIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={obj} />
+                                    </ListItem >
+                                )})}
+                            </List>
+                            :
+                            <Typography
+                                variant='body1'
+                                sx={{ marginLeft: 10}}
+                            >
+                            None
+                            </Typography>}
+                            <br/>
+                            <Typography
+                                variant='h4'
+                            >
+                                Description:
+                            </Typography>
+                            <br/>
+                            {groupInfo?.description !== "" ? 
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                                width='800px'
+                            >
+                                {groupInfo?.description}
+                            </Typography>
+                            :
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                            >
+                            None
+                            </Typography>}
+                            <br/><br/>
+                            <Typography
+                                variant='h4'
+                            >
+                                Benefits:
+                            </Typography>
+                            <br/>
+                            {(groupInfo?.Benefits.length !== 0 && groupInfo?.Benefits[0].Benefit !== "") ? 
+                            <List>
+                                {groupInfo?.Benefits.map(obj => {
+                                    return (
+                                    <ListItem style={{ marginLeft: 60, width:'800px' }}>
+                                        <ListItemIcon>
+                                            <StarIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={obj} />
+                                    </ListItem >
+                                )})}
+                            </List>
+                            :
+                            <Typography
+                                variant='body1'
+                                sx={{ marginLeft: 10}}
+                            >
+                            None
+                            </Typography>}
+                            <br/>
+                            <Typography
+                                variant='h4'
+                            >
+                                Beneficiaries:
+                            </Typography>
+                            <br/>
+                            {(groupInfo?.beneficiaries.length !== 0 && groupInfo?.beneficiaries[0].Beneficiary !== "") ? 
+                            <List>
+                                {groupInfo?.beneficiaries.map(obj => {
+                                    return (
+                                    <ListItem style={{ marginLeft: 60 }}>
+                                        <ListItemIcon>
+                                            <StarIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={obj} />
+                                    </ListItem >
+                                )})}
+                            </List>
+                            :
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                            >
+                            None
+                            </Typography>}
+                            <br/>
+                            <Typography
+                                variant='h4'
+                            >
+                                Stakeholders:
+                            </Typography>
+                            <br/>
+                            {(groupInfo?.stakeHolders.length !== 0 && groupInfo?.stakeHolders[0].Stakeholder !== "") ? 
+                            <List>
+                                {groupInfo?.stakeHolders.map(obj => {
+                                    return (
+                                    <ListItem style={{ marginLeft: 60 }}>
+                                        <ListItemIcon>
+                                            <StarIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={obj} />
+                                    </ListItem >
+                                )})}
+                            </List>
+                            :
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                            >
+                            None
+                            </Typography>}
+                            <br/>
+                            <Typography
+                                variant='h4'
+                            >
+                                Deliverables:
+                            </Typography>
+                            <br/>
+                            {(groupInfo?.deliverables.length !== 0 && groupInfo?.deliverables[0].Deliverable !== "" ) ? 
+                            <List>
+                                {groupInfo?.deliverables.map(obj => {
+                                    return (
+                                    <ListItem style={{ marginLeft: 60 }}>
+                                        <ListItemIcon>
+                                            <StarIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={obj} />
+                                    </ListItem >
+                                )})}
+                            </List>
+                            :
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                            >
+                            None
+                            </Typography>}
+                            <br/>
+                            <Typography
+                                variant='h4'
+                            >
+                                Estimated Project Duration:
+                            </Typography>
+                            <br/>
+                            {groupInfo?.duration !== -1 ? 
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                            >
+                                {`${groupInfo?.Duration} weeks`}
+                            </Typography>
+                            :
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                            >
+                            None
+                            </Typography>}
+                        </CardContent>
+                        
+                    </Card>
+                    :
+                    <Card>
+                        <CardHeader
+                            sx={{ bgcolor: 'primary.main', color: 'white'}}
+                            title={<Typography variant='h4'>{groupInfo.groupName}</Typography>}
+                            
                         />
-                        <br/><br/>
-                        <Typography variant='h4'>Objectives:</Typography>
-                        <br/>
-                        {objectives.map((inputField, index) => (
-                        <div key={index}>
-                            <TextField 
-                            name='Objective'
-                            label={`Objective ${index+1}`}
-                            multiline
-                            variant='filled'
-                            type='text'
-                            value={inputField.Objective}
-                            style={{width: 400, marginLeft: 40, marginTop: 5}}
-                            onChange={event => handleChangeObjective(index, event)}
-                            />
-                            
-                            <Button onClick={() => handleRemoveObjective(inputField.id)}>
-                                <RemoveIcon style={{ color: 'black' }}/>
-                            </Button>
-                            <IconButton onClick={handleAddObjective}>
-                                <AddIcon style={{ color: 'black' }}/>
-                            </IconButton>
-                        </div>
-                        ))}
-                        <br/>
-                        <Typography variant='h4'>Description:</Typography>
-                        <br/>
-                        <TextField
-                            variant="filled"
-                            multiline
-                            type="text"
-                            label="Description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            style={{width: 800, marginLeft: 40, marginTop: 5}}
-                        />
-                        <br/><br/>
-                        <Typography variant='h4'>Benefits:</Typography>
-                        <br/>
-                        {benefits.map((inputField, index) => (
-                        <div key={index}>
-                            <TextField 
-                            name='Benefit'
-                            type='text'
-                            label={`Benefit ${index+1}`}
-                            variant='filled'
-                            value={inputField.Benefit}
-                            style={{width: 400, marginLeft: 40, marginTop: 5}}
-                            onChange={event => handleChangeBenefits(index, event)}
-                            />
-                            
-                            <Button onClick={() => handleRemoveBenefits(inputField.id)}>
-                                <RemoveIcon style={{ color: 'black' }}/>
-                            </Button>
-                            <IconButton onClick={handleAddBenefits}>
-                                <AddIcon style={{ color: 'black' }}/>
-                            </IconButton>
-                        </div>
-                        ))}
-                        <br/>
-                        <Typography variant='h4'>Beneficiaries:</Typography>
-                        <br/>
-                        {beneficiaries.map((inputField, index) => (
-                        <div key={index}>
-                            <TextField 
-                            name='Beneficiary'
-                            type='text'
-                            label={`Beneficiary ${index+1}`}
-                            variant='filled'
-                            value={inputField.Beneficiary}
-                            style={{width: 400, marginLeft: 40, marginTop: 5}}
-                            onChange={event => handleChangeBeneficiary(index, event)}
-                            />
-                            
-                            <Button onClick={() => handleRemoveBeneficiary(inputField.id)}>
-                                <RemoveIcon style={{ color: 'black' }}/>
-                            </Button>
-                            <IconButton onClick={handleAddBeneficiary}>
-                                <AddIcon style={{ color: 'black' }}/>
-                            </IconButton>
-                        </div>
-                        ))}
-                        <br/>
-                        <Typography variant='h4'>Stakeholders:</Typography>
-                        <br/>
-                        {stakeholders.map((inputField, index) => (
-                        <div key={index}>
+                        
+                        <CardContent>
+                            <Typography variant='h4'>Project Name:</Typography>
+                            <br/>
                             <TextField
-                            name='Stakeholder'
-                            type='text'
-                            label={`Stakeholder ${index+1}`}
-                            variant='filled'
-                            value={inputField.Stakeholder}
-                            style={{width: 400, marginLeft: 40, marginTop: 5}}
-                            onChange={event => handleChangeStakeholder(index, event)}
+                                variant="filled"
+                                type="text"
+                                label="Project Name"
+                                value={projectName}
+                                onChange={(e) => setProjectName(e.target.value)}
+                                style={{width: 400, marginLeft: 40, marginTop: 5}}
                             />
-                            
-                            <Button onClick={() => handleRemoveStakeholder(inputField.id)}>
-                                <RemoveIcon style={{ color: 'black' }}/>
-                            </Button>
-                            <IconButton onClick={handleAddStakeholder}>
-                                <AddIcon style={{ color: 'black' }}/>
-                            </IconButton>
-                        </div>
-                        ))}
-                        <br/>
-                        <Typography variant='h4'>Deliverables:</Typography>
-                        <br/>
-                        {deliverables.map((inputField, index) => (
-                        <div key={index}>
+                            <br/><br/>
+                            <Typography variant='h4'>Project Type:</Typography>
+                            <br/>
+                            <FormControl variant="filled" sx={{width: 250, marginLeft: 5}}>
+                                <InputLabel >Project Type</InputLabel>
+                                <Select
+                                value={type}
+                                onChange={(e)=> setType(e.target.value)}
+                                >
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value="Technical">Technical</MenuItem>
+                                <MenuItem value="Business">Business</MenuItem>
+                                <MenuItem value="Research">Research</MenuItem>
+                                <MenuItem value="Entrepreneurial">Entrepreneurial</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <br/><br/>
+                            <Typography variant='h4'>Project Scope:</Typography>
+                            <br/>
                             <TextField
-                            name='Deliverable'
-                            type='text'
-                            label={`Deliverable ${index+1}`}
-                            variant='filled'
-                            value={inputField.Deliverable}
-                            style={{width: 400, marginLeft: 40, marginTop: 5}}
-                            onChange={event => handleChangeDeliverable(index, event)}
+                                variant="filled"
+                                type="text"
+                                label="Project Scope"
+                                value={projectScope}
+                                multiline
+                                onChange={(e) => setProjectScope(e.target.value)}
+                                style={{width: 800, marginLeft: 40, marginTop: 5}}
                             />
-                            
-                            <Button onClick={() => handleRemoveDeliverable(inputField.id)}>
-                                <RemoveIcon style={{ color: 'black' }}/>
+                            <br/><br/>
+                            <Typography variant='h4'>Objectives:</Typography>
+                            <br/>
+                            {objectives.map((inputField, index) => (
+                            <div key={index}>
+                                <TextField 
+                                name='Objective'
+                                label={`Objective ${index+1}`}
+                                multiline
+                                variant='filled'
+                                type='text'
+                                value={inputField.Objective}
+                                style={{width: 400, marginLeft: 40, marginTop: 5}}
+                                onChange={event => handleChangeObjective(index, event)}
+                                />
+                                
+                                <Button onClick={() => handleRemoveObjective(inputField.id)}>
+                                    <RemoveIcon style={{ color: 'black' }}/>
+                                </Button>
+                                <IconButton onClick={handleAddObjective}>
+                                    <AddIcon style={{ color: 'black' }}/>
+                                </IconButton>
+                            </div>
+                            ))}
+                            <br/>
+                            <Typography variant='h4'>Description:</Typography>
+                            <br/>
+                            <TextField
+                                variant="filled"
+                                multiline
+                                type="text"
+                                label="Description"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                style={{width: 800, marginLeft: 40, marginTop: 5}}
+                            />
+                            <br/><br/>
+                            <Typography variant='h4'>Benefits:</Typography>
+                            <br/>
+                            {benefits.map((inputField, index) => (
+                            <div key={index}>
+                                <TextField 
+                                name='Benefit'
+                                type='text'
+                                label={`Benefit ${index+1}`}
+                                variant='filled'
+                                value={inputField.Benefit}
+                                style={{width: 400, marginLeft: 40, marginTop: 5}}
+                                onChange={event => handleChangeBenefits(index, event)}
+                                />
+                                
+                                <Button onClick={() => handleRemoveBenefits(inputField.id)}>
+                                    <RemoveIcon style={{ color: 'black' }}/>
+                                </Button>
+                                <IconButton onClick={handleAddBenefits}>
+                                    <AddIcon style={{ color: 'black' }}/>
+                                </IconButton>
+                            </div>
+                            ))}
+                            <br/>
+                            <Typography variant='h4'>Beneficiaries:</Typography>
+                            <br/>
+                            {beneficiaries.map((inputField, index) => (
+                            <div key={index}>
+                                <TextField 
+                                name='Beneficiary'
+                                type='text'
+                                label={`Beneficiary ${index+1}`}
+                                variant='filled'
+                                value={inputField.Beneficiary}
+                                style={{width: 400, marginLeft: 40, marginTop: 5}}
+                                onChange={event => handleChangeBeneficiary(index, event)}
+                                />
+                                
+                                <Button onClick={() => handleRemoveBeneficiary(inputField.id)}>
+                                    <RemoveIcon style={{ color: 'black' }}/>
+                                </Button>
+                                <IconButton onClick={handleAddBeneficiary}>
+                                    <AddIcon style={{ color: 'black' }}/>
+                                </IconButton>
+                            </div>
+                            ))}
+                            <br/>
+                            <Typography variant='h4'>Stakeholders:</Typography>
+                            <br/>
+                            {stakeholders.map((inputField, index) => (
+                            <div key={index}>
+                                <TextField
+                                name='Stakeholder'
+                                type='text'
+                                label={`Stakeholder ${index+1}`}
+                                variant='filled'
+                                value={inputField.Stakeholder}
+                                style={{width: 400, marginLeft: 40, marginTop: 5}}
+                                onChange={event => handleChangeStakeholder(index, event)}
+                                />
+                                
+                                <Button onClick={() => handleRemoveStakeholder(inputField.id)}>
+                                    <RemoveIcon style={{ color: 'black' }}/>
+                                </Button>
+                                <IconButton onClick={handleAddStakeholder}>
+                                    <AddIcon style={{ color: 'black' }}/>
+                                </IconButton>
+                            </div>
+                            ))}
+                            <br/>
+                            <Typography variant='h4'>Deliverables:</Typography>
+                            <br/>
+                            {deliverables.map((inputField, index) => (
+                            <div key={index}>
+                                <TextField
+                                name='Deliverable'
+                                type='text'
+                                label={`Deliverable ${index+1}`}
+                                variant='filled'
+                                value={inputField.Deliverable}
+                                style={{width: 400, marginLeft: 40, marginTop: 5}}
+                                onChange={event => handleChangeDeliverable(index, event)}
+                                />
+                                
+                                <Button onClick={() => handleRemoveDeliverable(inputField.id)}>
+                                    <RemoveIcon style={{ color: 'black' }}/>
+                                </Button>
+                                <IconButton onClick={handleAddDeliverable}>
+                                    <AddIcon style={{ color: 'black' }}/>
+                                </IconButton>
+                            </div>
+                            ))}
+                            <br/>
+                            <Typography variant='h4'>Estimated Project Duration:</Typography>
+                            <br/>
+                            <TextField
+                            label='Duration'
+                            variant='filled'
+                            type='number'
+                            style={{width: 250, marginLeft: 40, marginTop: 5}}
+                            value={duration}
+                            onKeyPress={(event) => {
+                                if (!/[0-9]/.test(event.key)) {
+                                event.preventDefault();
+                                }
+                            }}
+                            onChange={(e) => setDuration(e.target.value)}
+                            />  
+                        </CardContent>
+                        <CardActions>
+                            <Button 
+                            size="large"
+                            variant="contained"
+                            style={{
+                            marginLeft: '50px',
+                            color: "black",
+                            backgroundColor: "#EEBC1D",
+                            }}
+                            onClick={handleSaveChanges}
+                            >
+                                Finish
                             </Button>
-                            <IconButton onClick={handleAddDeliverable}>
-                                <AddIcon style={{ color: 'black' }}/>
-                            </IconButton>
-                        </div>
-                        ))}
-                        <br/>
-                        <Typography variant='h4'>Estimated Project Duration:</Typography>
-                        <br/>
-                        <TextField
-                        label='Duration'
-                        variant='filled'
-                        type='number'
-                        style={{width: 250, marginLeft: 40, marginTop: 5}}
-                        value={duration}
-                        onKeyPress={(event) => {
-                            if (!/[0-9]/.test(event.key)) {
-                            event.preventDefault();
-                            }
-                        }}
-                        onChange={(e) => setDuration(e.target.value)}
-                        />  
-                    </CardContent>
-                    <CardActions>
-                        <Button 
-                        size="large"
-                        variant="contained"
-                        style={{
-                        marginLeft: '50px',
-                        color: "black",
-                        backgroundColor: "#EEBC1D",
-                        }}
-                        onClick={handleSaveChanges}
+                        </CardActions>
+                    </Card>
+                    }
+                    <Modal
+                        keepMounted
+                        open={open}
+                        onClose={handleClose}
+                    >
+                        <Box sx={style}>
+                        <Typography variant="h6" component="h2">
+                            Save these changes?
+                        </Typography>
+                        <Button
+                            variant="contained" 
+                            style={{ width: 85, height: 40, marginLeft: 15,color: "black", backgroundColor: "#EEBC1D" }} 
+                            onClick={handleSubmit}
                         >
-                            Finish
+                            Yes
                         </Button>
-                    </CardActions>
-                </Card>
-                }
-                <Modal
-                    keepMounted
-                    open={open}
-                    onClose={handleClose}
-                >
-                    <Box sx={style}>
-                    <Typography variant="h6" component="h2">
-                        Save these changes?
+                        <Button
+                            variant="contained" 
+                            style={{ width: 85, height: 40, marginLeft: 15,color: "black", backgroundColor: "#EEBC1D" }} 
+                            onClick={handleClose}
+                        >
+                            No
+                        </Button>
+                        </Box>
+                    </Modal>
+                </Box>
+                :
+                <Box sx={{ m: 10}}>
+                    <Typography variant='h2'>
+                        You have not yet joined a group
                     </Typography>
-                    <Button
-                        variant="contained" 
-                        style={{ width: 85, height: 40, marginLeft: 15,color: "black", backgroundColor: "#EEBC1D" }} 
-                        onClick={handleSubmit}
-                    >
-                        Yes
-                    </Button>
-                    <Button
-                        variant="contained" 
-                        style={{ width: 85, height: 40, marginLeft: 15,color: "black", backgroundColor: "#EEBC1D" }} 
-                        onClick={handleClose}
-                    >
-                        No
-                    </Button>
-                    </Box>
-                </Modal>
-            </Box>
-            :
-            <Box sx={{ m: 10}}>
-                <Typography variant='h2'>
-                    You have not yet joined a group
-                </Typography>
-                <br/><br/>
-                <Link to="/groups">View Groups Here</Link>
-            </Box>
-            
-            }
+                    <br/><br/>
+                    <Link to="/groups">View Groups Here</Link>
+                </Box>
+                
+                }
+            </Container>
         </ThemeProvider>
     );
 }

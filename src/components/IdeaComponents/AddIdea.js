@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AddIdea = () => {
     const classes = useStyles();
-    const { setAlert, availIdeas, setAvailIdeas } = ProManageState();
+    const { setAlert, availIdeas } = ProManageState();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('');

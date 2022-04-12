@@ -39,21 +39,10 @@ const useStyles = makeStyles((theme) => ({
       color: "gold",
     },
   },
-  modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  paper: {
-    width: "500px",
-    backgroundColor: theme.palette.background.paper,
-    color: "white",
-    borderRadius: 10,
-  },
 }));
 
 export default function AvailableIdeas() {
-  const { user, isAdmin, setAlert, availIdeas, loading } = ProManageState();
+  const { availIdeas, loading } = ProManageState();
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
   const classes = useStyles();

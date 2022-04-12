@@ -5,6 +5,10 @@ import "./styles.css";
 import AddEvent from './addEvent';
 import { makeStyles } from "@material-ui/core/styles";
 
+import { db } from "../../../firebase";
+import { getDocs, collection, setDoc, doc, getDoc, addDoc, deleteDoc, } from 'firebase/firestore';
+import { ProManageState } from '../../../ProManageContext';
+
 const useStyles = makeStyles((theme) => ({
   container: {
     maxWidth: '500px',
@@ -20,80 +24,71 @@ const EventTracker = () => {
   const [showAddTask, setShowAddTask] = useState(false)
   const [tasks, setTasks] = useState([])
   const classes = useStyles();
+  const { setAlert } = ProManageState();
 
-  // useEffect(() => {
-  //   const getTasks = async () => {
-  //     const tasksFromServer = await fetchTasks()
-  //     setTasks(tasksFromServer)
-  //   }
+  useEffect(() => {
+    const getTasks = async () => {
+      const eventsRef = collection(db, "Events");
+      const data = await getDocs(eventsRef);
+      if (data) {
+        setTasks(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      }
+      else {
+        console.log("No Events");
+      }
+    }
 
-  //   getTasks()
-  // }, [])
-
-  // Fetch Tasks
-  const fetchTasks = async () => {
-    const res = await fetch('http://localhost:5000/tasks')
-    const data = await res.json()
-
-    return data
-  }
+    getTasks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Fetch Task
   const fetchTask = async (id) => {
-    const res = await fetch(`http://localhost:5000/tasks/${id}`)
-    const data = await res.json()
-
-    return data
+    const eventRef = doc(db, "Events", id);
+    const eventSnap = await getDoc(eventRef);
+    return eventSnap.data();
   }
 
   // Add Task
-  const addTask = async (task) => {
-    const res = await fetch('http://localhost:5000/tasks', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(task),
-    })
-
-    const data = await res.json()
-
-    setTasks([...tasks, data])
-
-    // const id = Math.floor(Math.random() * 10000) + 1
-    // const newTask = { id, ...task }
-    // setTasks([...tasks, newTask])
+  const addTask = async (event) => {
+    console.log(event)
+    await addDoc(collection(db, "Events"), 
+      event
+    );
+    setTasks([...tasks, event]);
   }
 
   // Delete Task
   const deleteTask = async (id) => {
-    const res = await fetch(`http://localhost:5000/tasks/${id}`, {
-      method: 'DELETE',
-    })
-    //We should control the response status to decide if we will change the state or not.
-    res.status === 200
-      ? setTasks(tasks.filter((task) => task.id !== id))
-      : alert('Error Deleting This Task')
+    try {
+      await deleteDoc(doc(db, "Events", id));
+      setAlert({
+        open: true,
+        message: `Deleted ${id}` ,
+        type: "success",
+      });
+      setTasks(tasks.filter((task) => task.id !== id))
+    } catch (error) {
+      setAlert({
+        open: true,
+        message: error.message,
+        type: "error",
+      });
+    }
   }
 
   // Toggle Reminder
   const toggleReminder = async (id) => {
     const taskToToggle = await fetchTask(id)
     const updTask = { ...taskToToggle, reminder: !taskToToggle.reminder }
-
-    const res = await fetch(`http://localhost:5000/tasks/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(updTask),
-    })
-
-    const data = await res.json()
+    const eventRef = doc(db, "Events", id);
+    await setDoc(eventRef, 
+      updTask
+    );
 
     setTasks(
       tasks.map((task) =>
-        task.id === id ? { ...task, reminder: data.reminder } : task
+        task.id === id ? { ...task, reminder: !taskToToggle.reminder } : task
       )
     )
   }
