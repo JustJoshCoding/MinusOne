@@ -26,6 +26,15 @@ const EventTracker = () => {
   const classes = useStyles();
   const { setAlert } = ProManageState();
 
+  // useEffect(() => {
+  //   const getTasks = async () => {
+  //     const tasksFromServer = await fetchTasks()
+  //     setTasks(tasksFromServer)
+  //   }
+
+  //   getTasks()
+  // }, [])
+
   useEffect(() => {
     const getTasks = async () => {
       const eventsRef = collection(db, "Events");
