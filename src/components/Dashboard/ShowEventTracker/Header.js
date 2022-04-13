@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { useLocation } from 'react-router-dom';
 import Button from './Button';
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -14,7 +13,6 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Header = ({ title, onAdd, showAdd }) => {
-  const location = useLocation()
   const classes = useStyles()
   return (
     <header className={classes.header}>

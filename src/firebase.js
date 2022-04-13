@@ -9,9 +9,9 @@ import "firebase/storage";
 
 const firebaseApp = initializeApp(firebaseConfig);
 
+const storage = getStorage(firebaseApp);
+const auth = getAuth(firebaseApp); // For Authentication
+const db = getFirestore(firebaseApp); // For Using Database
 
-const auth = getAuth(); // For Authentication
-const db = getFirestore(); // For Using Database
-const storage = getStorage();
+export { auth, db, storage };
 
-export {  auth, db, storage };

@@ -13,13 +13,19 @@ const ProManageContext = ({ children }) => {
     type: "success",
   });
 
-  // application states
+  // global states used in the application
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [availIdeas, setAvailIdeas] = useState([]);
   const [groups, setGroups] = useState([]);
   const [groupInfo, setGroupInfo] = useState(null);
   const [timeline, setTimeline] = useState([]);
+
+  const [currentAccProps, setCurrentAccProps] = useState([]);
+  const [pendingProposals, setPendingProposals] = useState([]);
+  const [students, setStudents] = useState([]);
+
   const [userInfo, setUserInfo] = useState({
     ID: "",
     email: "",
@@ -33,8 +39,10 @@ const ProManageContext = ({ children }) => {
   // check if user is an admin and get user info
   const checkAdminStatus = async (newUser) => {
     const userRef = doc(db, "users", newUser?.uid);
+    setLoading(true);
     const userSnap = await getDoc(userRef);
     setUserInfo(userSnap.data())
+    setLoading(false);
     if (userSnap.data().isAdmin){
       setIsAdmin(true)
     }
@@ -53,12 +61,55 @@ const ProManageContext = ({ children }) => {
     //database references
     const ideaRef = collection(db, "Available Ideas");
     const groupRef = collection(db, "Groups");
- 
+    const ideaRef2 = collection(db, "Current Proposals");
+    const pendRef = collection(db, "Pending Proposals");
+    const studsRef = collection(db, "users");
+
+    // get all current students proposals
+    const getAllStudentAccounts = async  () => {
+      setLoading(true);
+      const data = await getDocs(studsRef);
+      if (data) {
+        setStudents(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        setLoading(false);
+      }
+      else {
+        console.log("No proposals pending");
+      }
+    };
+
+    // get pending proposals
+    const getPendingProposals = async  () => {
+      setLoading(true);
+      const data = await getDocs(pendRef);
+      if (data) {
+        setPendingProposals(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        setLoading(false);
+      }
+      else {
+        console.log("No proposals pending");
+      }
+    };
+
+    // get current accepted proposals
+    const getCurrAccepted = async  () => {
+      setLoading(true);
+      const data = await getDocs(ideaRef2);
+      if (data) {
+        setCurrentAccProps(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        setLoading(false);
+      }
+      else {
+        console.log("No accepted proposals");
+      }
+    };
     // get available ideas
     const getAvailIdeas = async  () => {
+      setLoading(true);
       const data = await getDocs(ideaRef);
       if (data) {
         setAvailIdeas(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        setLoading(false);
       }
       else {
         console.log("No Available Ideas");
@@ -77,8 +128,9 @@ const ProManageContext = ({ children }) => {
 
     getAvailIdeas();
     getGroups();
-    
-    
+    getCurrAccepted();
+    getPendingProposals();
+    getAllStudentAccounts();
   }, [])
 
   useEffect(() => {
@@ -137,7 +189,13 @@ const ProManageContext = ({ children }) => {
         availIdeas,
         isAdmin,
         groupInfo,
-        timeline
+        timeline,
+
+        loading,
+        currentAccProps,
+        pendingProposals,
+        students
+
       }}
     >
       {children}

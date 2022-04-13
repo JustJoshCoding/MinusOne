@@ -3,10 +3,7 @@ import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import StaticDateRangePicker from '@mui/lab/StaticDateRangePicker';
@@ -14,6 +11,8 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import EventTracker from '../components/Dashboard/ShowEventTracker/EventTracker';
 import Timeline from '../components/Dashboard/ShowEventTracker/Timeline/Timeline'
+import { Container } from '@material-ui/core';
+
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -66,18 +65,20 @@ export default function Dashboard() {
     );
 
     return (
-        <Box sx={{ m: 20}}>
-            <Grid container spacing={{ xs: 5, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} >
-                <Grid item xs={5} >
+        <Container style={{ textAlign: "center" }}>
+            <Grid container spacing={{ xs: 5, md: 3 }} columns={{ xs: 8, sm: 8, md: 8 }} >
+                <Grid item xs={8} >
                     <Item>{showUpcommingEvents}</Item>
                 </Grid>
-                <Grid item xs={5} md={7} >
+
+                <Grid item xs={8}  >
                     <Item>{showCalendar}</Item>
                 </Grid>
-                <Grid item xs={10}>
+                <Grid item xs={8} >
+
                     <Item>{showTimeline}</Item>
                 </Grid>
             </Grid>
-        </Box>
+        </Container>
     );
 }

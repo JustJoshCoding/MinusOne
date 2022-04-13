@@ -19,6 +19,7 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
 import { IconButton } from "@material-ui/core";
+import CssBaseline from '@mui/material/CssBaseline';
 import * as React from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -44,7 +45,7 @@ const darkTheme = createTheme({
 function Header() {
 
   const classes = useStyles();
-  const { user } = ProManageState();
+  const { user,isAdmin } = ProManageState();
   const pages = ['Dashboard','Groups', 'Ideas', 'Submission','Students'];
   
 
@@ -61,7 +62,8 @@ function Header() {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <AppBar color="transparent" position="static">
+      <CssBaseline />
+      <AppBar color="transparent" position="static" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Container>
           <Toolbar>
             <Typography
@@ -102,24 +104,59 @@ function Header() {
                 display: { xs: "block", md: "none" }
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="right" onClick={() => navigate(`/${page}`)}>{page}</Typography>
-                </MenuItem>
-              ))}
+              
+            <MenuItem onClick={handleCloseNavMenu}>
+              <Typography textAlign="right" onClick={() => navigate(`/${pages[0]}`)}>{pages[0]}</Typography>
+            </MenuItem>
+            <MenuItem onClick={handleCloseNavMenu}>
+              <Typography textAlign="right" onClick={() => navigate(`/${pages[1]}`)}>{pages[1]}</Typography>
+            </MenuItem>
+            <MenuItem onClick={handleCloseNavMenu}>
+              <Typography textAlign="right" onClick={() => navigate(`/${pages[2]}`)}>{pages[2]}</Typography>
+            </MenuItem>
+            {isAdmin && 
+            <MenuItem onClick={handleCloseNavMenu}>
+              <Typography textAlign="right" onClick={() => navigate(`/${pages[3]}`)}>{pages[3]}</Typography>
+            </MenuItem>}
+            <MenuItem onClick={handleCloseNavMenu}>
+              <Typography textAlign="right" onClick={() => navigate(`/${pages[4]}`)}>{pages[4]}</Typography>
+            </MenuItem>
             </Menu>
           </Box>
           
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages.map((page) => (
+              
                 <Button
-                  key={page}
-                  onClick={() => navigate(`/${page}`)}
+                  onClick={() => navigate(`/${pages[0]}`)}
                   sx={{ my: 2, color: "gold", fontFamily: "Montserrat", display: "block" }}
                 >
-                  {page}
+                  {pages[0]}
                 </Button>
-              ))}
+                <Button
+                  onClick={() => navigate(`/${pages[1]}`)}
+                  sx={{ my: 2, color: "gold", fontFamily: "Montserrat", display: "block" }}
+                >
+                  {pages[1]}
+                </Button>
+                <Button
+                  onClick={() => navigate(`/${pages[2]}`)}
+                  sx={{ my: 2, color: "gold", fontFamily: "Montserrat", display: "block" }}
+                >
+                  {pages[2]}
+                </Button>
+                {isAdmin && <Button
+                  onClick={() => navigate(`/${pages[3]}`)}
+                  sx={{ my: 2, color: "gold", fontFamily: "Montserrat", display: "block" }}
+                >
+                  {pages[3]}
+                </Button>}
+                <Button
+                  onClick={() => navigate(`/${pages[4]}`)}
+                  sx={{ my: 2, color: "gold", fontFamily: "Montserrat", display: "block" }}
+                >
+                  {pages[4]}
+                </Button>
+              
             </Box>
             {user ? <UserSidebar /> : <AuthModal />}
           </Toolbar>

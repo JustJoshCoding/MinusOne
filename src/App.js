@@ -1,5 +1,4 @@
 import { makeStyles } from "@material-ui/core";
-import Homepage from "./Pages/HomePage";
 import Groups from "./Pages/Groups";
 import GroupAdd from "./Pages/GroupAdd";
 import "./App.css";
@@ -16,6 +15,11 @@ import ViewGroupPage from "./Pages/ViewGroupPage";
 import ViewProfilePage from "./Pages/ViewProfilePage";
 import TimelineAdd from "./Pages/TimelineAdd";
 import Dropzone from "./components/SubmissionBox2/Dropzone";
+import IdeaProposal from "./components/IdeaComponents/IdeaProposal";
+import SubmissionsPage from "./Pages/SubmissionsPage";
+import ViewProposal from "./components/Submission/ViewProposal";
+import StudentsPage from "./Pages/StudentsPage";
+
 
 const useStyles = makeStyles(() => ({
   App: {
@@ -77,6 +81,23 @@ function App() {
           <Route
             path='/timelineadd'
             element={<TimelineAdd/>}
+          />
+          <Route
+            path='/ideaproposal/:id'
+            element={<IdeaProposal/>}
+          />
+          <Route
+            path='/submission'
+            element={<SubmissionsPage/>}
+          />
+          <Route
+            path='/studentproposal/:id'
+            element={<ViewProposal/>}
+          />
+          <Route
+            path='/students'
+            element={<StudentsPage/>}
+
           />
         </Routes>
       </div>

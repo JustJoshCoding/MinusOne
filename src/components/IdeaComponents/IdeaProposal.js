@@ -1,34 +1,30 @@
 import { useState } from 'react';
-import { Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardHeader, Modal } from '@mui/material';
-import { ProManageState } from "../ProManageContext";
+import { ProManageState } from '../../ProManageContext';
 import { Box } from '@mui/system';
-import EditIcon from '@mui/icons-material/Edit';
-import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase';
-
 import TextField from '@mui/material/TextField';
-import { Button, Container } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { IconButton } from '@material-ui/core';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
-
+import LightbulbRoundedIcon from '@mui/icons-material/LightbulbRounded';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import StarIcon from '@mui/icons-material/Star';
-import PersonIcon from '@mui/icons-material/Person';
+import { db } from '../../firebase';
+import { deleteDoc, doc, addDoc, updateDoc, collection, arrayUnion } from "firebase/firestore";
+import {
+    LinearProgress,
+    makeStyles,
+  } from "@material-ui/core";
+
 
 const style = {
   position: 'absolute',
@@ -49,17 +45,55 @@ const theme = createTheme({
     },
   });
 
-export default function MyGroupPage() {
-    const { userInfo, groupInfo, groups, setAlert } = ProManageState();
-    const [editMode, setEditMode] = useState(false);
-    const [open, setOpen] = useState(false);
+export default function IdeaProposal() {
+    const { availIdeas, user, userInfo, setAlert, loading } = ProManageState();
 
+    const [open, setOpen] = useState(false);
     const [projectName, setProjectName] = useState("");
     const [duration, setDuration] = useState(-1);
     const [projectScope, setProjectScope] = useState("");
     const [description, setDescription] = useState("");
     const [type, setType] = useState("");
+    const navigate =useNavigate();
+    const { id } = useParams();
+    
+    const useStyles = makeStyles((theme) => ({
+        container: {
+          display: "flex",
+          [theme.breakpoints.down("md")]: {
+            flexDirection: "column",
+            alignItems: "center",
+          },
+        },
+        sidebar: {
+          width: "30%",
+          [theme.breakpoints.down("md")]: {
+            width: "100%",
+          },
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          marginTop: 25,
+          borderRight: "2px solid grey",
+        },
+        heading: {
+            fontWeight: "bold",
+            marginBottom: 20,
+            fontFamily: "Montserrat",
+        },
+        description: {
+            width: "100%",
+            fontFamily: "Montserrat",
+            padding: 25,
+            paddingBottom: 15,
+            paddingTop: 0,
+            textAlign: "justify",
+        },
+    }));
 
+    const classes = useStyles();
+
+    
     const [deliverables, setDeliverables] = useState([
         {Deliverable: "" }
     ]);
@@ -174,6 +208,12 @@ export default function MyGroupPage() {
             setDeliverables(values);
         }
     }
+    
+    const handleSaveChanges = () => setOpen(true);
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const handleSubmit = async () => {
         if (!projectName || !type || !projectScope || !objectives || !description || !benefits || !beneficiaries || !stakeholders || !deliverables || !duration){
@@ -184,335 +224,87 @@ export default function MyGroupPage() {
                 });
             return;
         }
-        const mygroup = groups.findIndex(group => group.id === groupInfo.id);
-        const groupData = {
-            Benefits: groups[mygroup].Benefits = benefits,
-            Duration: groups[mygroup].Duration = duration,
-            beneficiaries: groups[mygroup].beneficiaries = beneficiaries,
-            deliverables: groups[mygroup].deliverables = deliverables,
-            objectives: groups[mygroup].objectives = objectives,
-            projectScope: groups[mygroup].projectScope = projectScope,
-            pojectType: groups[mygroup].pojectType = type,
-            stakeHolders: groups[mygroup].stakeholders = stakeholders,
-            projectName: groups[mygroup].projectName = projectName,
-        };
-        
-        const groupRef = doc(db, "Groups", groupInfo.id);
+        const proposal = {
+            projectName: projectName,
+            projectType: type,
+            projectScope: projectScope,
+            objectives: objectives,
+            description: description,
+            benefits: benefits,
+            beneficiaries: beneficiaries,
+            stakeholders: stakeholders,
+            deliverables: deliverables,
+            duration: duration
+        }
+
+        //remove idea from available ideas, update user status adnd prrofile with proposal and add to pending proposals database
         try {
-            await updateDoc(groupRef, groupData)
+            await Promise.all([
+                deleteDoc(doc(db, "Available Ideas", id)),
+                updateDoc(doc(db, "users", user.uid), { proposal: proposal, status: arrayUnion("Pending Proposal") }),
+                addDoc(collection(db, "Pending Proposals"), { 
+                    proposal: proposal, 
+                    id: user.uid, 
+                    studentID: userInfo.ID, 
+                    fullname: userInfo.firstname + " " + userInfo.lastname, 
+                    received: new Date().toLocaleString(),
+                    idea: (availIdeas.find(idea => idea.id === id)) 
+                 })
+            ]);
+            userInfo.status.push("Pending Proposal");
+            const index = availIdeas.indexOf((availIdeas.find(idea => idea.id === id)));
+            availIdeas.splice(index);
             setAlert({
-            open: true,
-            message: 'Successfully Updated Group Information!',
-            type: "success",
-        });
+                open: true,
+                message: "You have successfully submit your proposal",
+                type: "success",
+                });
+                navigate('/');
         } catch (error) {
             setAlert({
             open: true,
             message: error.message,
             type: "error",
-        });
-        return;
+            });
         }
-        setEditMode(false);
-        handleClose();
-    };
-
-    const handleSaveChanges = () => setOpen(true);
-
-    const handleClose = () => {
-        setOpen(false);
-        setEditMode(false);
-    };
+    }
 
     return (
         <ThemeProvider theme={theme}>
-             <Container style={{ textAlign: "left" }}>
-                {userInfo?.groupName !== "" ? <Box sx={{ m: 10}}>
-                    {!editMode ? 
+            {loading ? (
+            <LinearProgress style={{ backgroundColor: "gold" }} />
+            ) : (
+            <div className={classes.container}>
+                <div className={classes.sidebar}>
+                    <LightbulbRoundedIcon style={{ color: 'gold', height: 200, width: 200 }}/>
+                    
+                    <Typography variant='h3' className={classes.heading}>
+                        {(availIdeas.find(idea => idea.id === id))?.name}
+                    </Typography>
+                    <Typography variant="subtitle1" className={classes.description}>
+                        {(availIdeas.find(idea => idea.id === id))?.description}
+                    </Typography>
+                    <Typography variant="h5" className={classes.heading}>
+                        Project Type:
+                    </Typography>
+                    &nbsp; &nbsp;
+                    <Typography
+                        variant="h5"
+                        style={{
+                            fontFamily: "Montserrat",
+                        }}
+                        >
+                        {(availIdeas.find(idea => idea.id === id))?.type}
+                    </Typography>
+
+                </div>
+                <Box sx={{ m: 10}}>
                     <Card>
                         <CardHeader
                             sx={{ bgcolor: 'primary.main', color: 'white'}}
-                            title={<Typography variant='h4'>{groupInfo?.groupName}</Typography>}
-                            avatar = {<EditIcon style={{ cursor: "pointer"}} fontSize="large" onClick={() => setEditMode(true)}/>}
-                        />
-                        <CardMedia
-                            component="img"
-                            height={500}
-                            alt="green iguana"
-                            image="https://cdn.memiah.co.uk/blog/wp-content/uploads/counselling-directory.org.uk/2019/04/shutterstock_1464234134-1024x684.jpg"
-                        />
-                        <CardContent>
-                            <Typography
-                                variant='h4'
-                            >
-                                Project Name:
-                            </Typography>
-                            <br/>
-                            {groupInfo?.projectName !== "" ? 
-                            <Typography
-                                variant='body1'
-                                sx={{marginLeft: 10}}
-                            >
-                                {groupInfo?.projectName}
-                            </Typography>
-                            :
-                            <Typography
-                                variant='body1'
-                                sx={{marginLeft: 10}}
-                            >
-                            None
-                            </Typography>}
-                            <br/><br/>
-                            <Typography
-                                variant='h4'
-                            >
-                                Group Members:
-                            </Typography>
-                            {groupInfo?.groupMembers ? 
-                            <List>
-                                {groupInfo?.groupMembers.map(obj => {
-                                    return (
-                                    <ListItem style={{ marginLeft: 60, width:'800px' }}>
-                                        <ListItemIcon>
-                                            <PersonIcon />
-                                        </ListItemIcon>
-                                        <ListItemText primary={`${obj.firstname} ${obj.lastname}`} />
-                                    </ListItem >
-                                )})}
-                            </List>
-                            :
-                            <Typography
-                                variant='body1'
-                                sx={{marginLeft: 10}}
-                            >
-                            None
-                            </Typography>}
-                            <Typography
-                                variant='h4'
-                            >
-                                Project Type:
-                            </Typography>
-                            <br/>
-                            {groupInfo?.projectType !== "" ? 
-                            <Typography
-                                variant='body1'
-                                sx={{marginLeft: 10}}
-                            >
-                                {groupInfo?.projectType}
-                            </Typography>
-                            :
-                            <Typography
-                                variant='body1'
-                                sx={{marginLeft: 10}}
-                            >
-                            None
-                            </Typography>}
-                            <br/><br/>
-                            <Typography
-                                variant='h4'
-                            >
-                                Project Scope:
-                            </Typography>
-                            <br/>
-                            {groupInfo?.projectScope !== "" ? 
-                            <Typography
-                                variant='body1'
-                                sx={{marginLeft: 10}}
-                                width='800px'
-                            >
-                                {groupInfo?.projectScope}
-                            </Typography>
-                            :
-                            <Typography
-                                variant='body1'
-                                sx={{marginLeft: 10}}
-                            >
-                            None
-                            </Typography>}
-                            <br/><br/>
-                            <Typography
-                                variant='h4'
-                            >
-                                Objectives:
-                            </Typography>
-                            <br/>
-                            {(groupInfo?.objectives.length !== 0 && groupInfo?.objectives[0].Objective !== "" ) ? 
-                            <List>
-                                {groupInfo?.objectives.map(obj => {
-                                    return (
-                                    <ListItem style={{ marginLeft: 60, width:'800px' }}>
-                                        <ListItemIcon>
-                                            <StarIcon />
-                                        </ListItemIcon>
-                                        <ListItemText primary={obj} />
-                                    </ListItem >
-                                )})}
-                            </List>
-                            :
-                            <Typography
-                                variant='body1'
-                                sx={{ marginLeft: 10}}
-                            >
-                            None
-                            </Typography>}
-                            <br/>
-                            <Typography
-                                variant='h4'
-                            >
-                                Description:
-                            </Typography>
-                            <br/>
-                            {groupInfo?.description !== "" ? 
-                            <Typography
-                                variant='body1'
-                                sx={{marginLeft: 10}}
-                                width='800px'
-                            >
-                                {groupInfo?.description}
-                            </Typography>
-                            :
-                            <Typography
-                                variant='body1'
-                                sx={{marginLeft: 10}}
-                            >
-                            None
-                            </Typography>}
-                            <br/><br/>
-                            <Typography
-                                variant='h4'
-                            >
-                                Benefits:
-                            </Typography>
-                            <br/>
-                            {(groupInfo?.Benefits.length !== 0 && groupInfo?.Benefits[0].Benefit !== "") ? 
-                            <List>
-                                {groupInfo?.Benefits.map(obj => {
-                                    return (
-                                    <ListItem style={{ marginLeft: 60, width:'800px' }}>
-                                        <ListItemIcon>
-                                            <StarIcon />
-                                        </ListItemIcon>
-                                        <ListItemText primary={obj} />
-                                    </ListItem >
-                                )})}
-                            </List>
-                            :
-                            <Typography
-                                variant='body1'
-                                sx={{ marginLeft: 10}}
-                            >
-                            None
-                            </Typography>}
-                            <br/>
-                            <Typography
-                                variant='h4'
-                            >
-                                Beneficiaries:
-                            </Typography>
-                            <br/>
-                            {(groupInfo?.beneficiaries.length !== 0 && groupInfo?.beneficiaries[0].Beneficiary !== "") ? 
-                            <List>
-                                {groupInfo?.beneficiaries.map(obj => {
-                                    return (
-                                    <ListItem style={{ marginLeft: 60 }}>
-                                        <ListItemIcon>
-                                            <StarIcon />
-                                        </ListItemIcon>
-                                        <ListItemText primary={obj} />
-                                    </ListItem >
-                                )})}
-                            </List>
-                            :
-                            <Typography
-                                variant='body1'
-                                sx={{marginLeft: 10}}
-                            >
-                            None
-                            </Typography>}
-                            <br/>
-                            <Typography
-                                variant='h4'
-                            >
-                                Stakeholders:
-                            </Typography>
-                            <br/>
-                            {(groupInfo?.stakeHolders.length !== 0 && groupInfo?.stakeHolders[0].Stakeholder !== "") ? 
-                            <List>
-                                {groupInfo?.stakeHolders.map(obj => {
-                                    return (
-                                    <ListItem style={{ marginLeft: 60 }}>
-                                        <ListItemIcon>
-                                            <StarIcon />
-                                        </ListItemIcon>
-                                        <ListItemText primary={obj} />
-                                    </ListItem >
-                                )})}
-                            </List>
-                            :
-                            <Typography
-                                variant='body1'
-                                sx={{marginLeft: 10}}
-                            >
-                            None
-                            </Typography>}
-                            <br/>
-                            <Typography
-                                variant='h4'
-                            >
-                                Deliverables:
-                            </Typography>
-                            <br/>
-                            {(groupInfo?.deliverables.length !== 0 && groupInfo?.deliverables[0].Deliverable !== "" ) ? 
-                            <List>
-                                {groupInfo?.deliverables.map(obj => {
-                                    return (
-                                    <ListItem style={{ marginLeft: 60 }}>
-                                        <ListItemIcon>
-                                            <StarIcon />
-                                        </ListItemIcon>
-                                        <ListItemText primary={obj} />
-                                    </ListItem >
-                                )})}
-                            </List>
-                            :
-                            <Typography
-                                variant='body1'
-                                sx={{marginLeft: 10}}
-                            >
-                            None
-                            </Typography>}
-                            <br/>
-                            <Typography
-                                variant='h4'
-                            >
-                                Estimated Project Duration:
-                            </Typography>
-                            <br/>
-                            {groupInfo?.duration !== -1 ? 
-                            <Typography
-                                variant='body1'
-                                sx={{marginLeft: 10}}
-                            >
-                                {`${groupInfo?.Duration} weeks`}
-                            </Typography>
-                            :
-                            <Typography
-                                variant='body1'
-                                sx={{marginLeft: 10}}
-                            >
-                            None
-                            </Typography>}
-                        </CardContent>
-                        
-                    </Card>
-                    :
-                    <Card>
-                        <CardHeader
-                            sx={{ bgcolor: 'primary.main', color: 'white'}}
-                            title={<Typography variant='h4'>{groupInfo.groupName}</Typography>}
+                            title={<Typography variant='h4'>Idea Proposal</Typography>}
                             
                         />
-                        
                         <CardContent>
                             <Typography variant='h4'>Project Name:</Typography>
                             <br/>
@@ -520,6 +312,8 @@ export default function MyGroupPage() {
                                 variant="filled"
                                 type="text"
                                 label="Project Name"
+                                autoComplete
+                                defaultValue={(availIdeas.find(idea => idea.id === id))?.name}
                                 value={projectName}
                                 onChange={(e) => setProjectName(e.target.value)}
                                 style={{width: 400, marginLeft: 40, marginTop: 5}}
@@ -549,6 +343,7 @@ export default function MyGroupPage() {
                                 variant="filled"
                                 type="text"
                                 label="Project Scope"
+                                autoComplete
                                 value={projectScope}
                                 multiline
                                 onChange={(e) => setProjectScope(e.target.value)}
@@ -565,6 +360,7 @@ export default function MyGroupPage() {
                                 multiline
                                 variant='filled'
                                 type='text'
+                                autoComplete
                                 value={inputField.Objective}
                                 style={{width: 400, marginLeft: 40, marginTop: 5}}
                                 onChange={event => handleChangeObjective(index, event)}
@@ -584,9 +380,11 @@ export default function MyGroupPage() {
                             <TextField
                                 variant="filled"
                                 multiline
+                                defaultValue={(availIdeas.find(idea => idea.id === id))?.description}
                                 type="text"
                                 label="Description"
                                 value={description}
+                                autoComplete
                                 onChange={(e) => setDescription(e.target.value)}
                                 style={{width: 800, marginLeft: 40, marginTop: 5}}
                             />
@@ -598,6 +396,7 @@ export default function MyGroupPage() {
                                 <TextField 
                                 name='Benefit'
                                 type='text'
+                                autoComplete
                                 label={`Benefit ${index+1}`}
                                 variant='filled'
                                 value={inputField.Benefit}
@@ -621,6 +420,7 @@ export default function MyGroupPage() {
                                 <TextField 
                                 name='Beneficiary'
                                 type='text'
+                                autoComplete
                                 label={`Beneficiary ${index+1}`}
                                 variant='filled'
                                 value={inputField.Beneficiary}
@@ -643,6 +443,7 @@ export default function MyGroupPage() {
                             <div key={index}>
                                 <TextField
                                 name='Stakeholder'
+                                autoComplete
                                 type='text'
                                 label={`Stakeholder ${index+1}`}
                                 variant='filled'
@@ -667,6 +468,7 @@ export default function MyGroupPage() {
                                 <TextField
                                 name='Deliverable'
                                 type='text'
+                                autoComplete
                                 label={`Deliverable ${index+1}`}
                                 variant='filled'
                                 value={inputField.Deliverable}
@@ -714,7 +516,7 @@ export default function MyGroupPage() {
                             </Button>
                         </CardActions>
                     </Card>
-                    }
+                
                     <Modal
                         keepMounted
                         open={open}
@@ -741,17 +543,7 @@ export default function MyGroupPage() {
                         </Box>
                     </Modal>
                 </Box>
-                :
-                <Box sx={{ m: 10}}>
-                    <Typography variant='h2'>
-                        You have not yet joined a group
-                    </Typography>
-                    <br/><br/>
-                    <Link to="/groups">View Groups Here</Link>
-                </Box>
-                
-                }
-            </Container>
+            </div>)}
         </ThemeProvider>
     );
 }
