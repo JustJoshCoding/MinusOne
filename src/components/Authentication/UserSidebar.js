@@ -90,7 +90,7 @@ export default function UserSidebar() {
               backgroundColor: "#EEBC1D",
             }}
             src={userInfo?.image}
-            alt={user.email}
+            alt={userInfo?.initials}
           />
           <Drawer
             anchor={anchor}

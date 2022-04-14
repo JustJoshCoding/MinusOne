@@ -49,7 +49,7 @@ const ProfilePage = () => {
                             avatar={
                                 <Avatar
                                     alt={`${userInfo.firstname} ${userInfo.lastname}`}
-                                    src=""
+                                    src={userInfo?.image}
                                     sx={{ width: 120, height: 120 }}
                                 />
                             }

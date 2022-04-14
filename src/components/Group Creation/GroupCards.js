@@ -40,7 +40,7 @@ const style = {
 }; 
 
 export default function GroupCards( { groups, search } ) {
-  const { user, setAlert, userInfo, isAdmin } = ProManageState();
+  const { user, setAlert, userInfo, isAdmin, students } = ProManageState();
   
   const [open, setOpen] = React.useState(false);
   const [password, setPassword] = React.useState("");
@@ -118,7 +118,9 @@ export default function GroupCards( { groups, search } ) {
 
   const handleGoToUserProfile = (id) => navigate(`/userprofile/${id}`);
 
-  
+  const getMember = (member) => {
+    return students.find((student) => student['ID'] === member);
+  }
   
 
   return (
@@ -152,14 +154,14 @@ export default function GroupCards( { groups, search } ) {
                               {group.groupMembers
                                 .map((member) => {
                                 return (
-                                <Tooltip title={`${member.firstname} ${member.lastname}  ${member['ID']} `} placement="bottom-end">
+                                <Tooltip title={`${getMember(member.ID)?.firstname} ${getMember(member.ID)?.lastname}  ${getMember(member.ID)?.ID} `} placement="bottom-end">
                                   <Avatar
                                     sx={{ bgcolor: 'gold', color: 'black' }} 
-                                    alt={`${member.firstname} ${member.lastname}`} 
-                                    src={member.image}
-                                    onClick={() => handleGoToUserProfile(member.ID)}
+                                    alt={`${getMember(member.ID)?.firstname} ${getMember(member.ID)?.lastname}`} 
+                                    src={getMember(member.ID)?.image}
+                                    onClick={() => handleGoToUserProfile(member?.ID)}
                                     >
-                                      {member.initials}
+                                      {getMember(member.ID)?.initials}
                                   </Avatar>
                                 </Tooltip>
                                 );

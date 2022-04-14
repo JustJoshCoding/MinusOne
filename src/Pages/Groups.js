@@ -1,6 +1,5 @@
 import React, { useEffect, useState }  from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -15,7 +14,7 @@ import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import { Button } from '@mui/material';
 import GroupCards from '../components/Group Creation/GroupCards';
 
-import { LinearProgress } from '@material-ui/core';
+import { Container, LinearProgress } from '@material-ui/core';
 
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -205,8 +204,8 @@ export default function PrimarySearchAppBar() {
   );
 
   return (
-    <Box sx={{ flexGrow: 1}}>
-      <AppBar position="static" color="transparent">
+    <Container>
+      <Box sx={{ flexGrow: 1}}>
         <Toolbar>
         <IconButton
             size="large"
@@ -235,7 +234,7 @@ export default function PrimarySearchAppBar() {
               onChange={(e)=> setSearchValue(e.target.value)}
               inputProps={{ 'aria-label': 'search' }}
             />
-           
+          
             <SearchIconWrapper>
               <SearchIcon/>
             </SearchIconWrapper>
@@ -271,13 +270,14 @@ export default function PrimarySearchAppBar() {
             </IconButton>
           </Box>
         </Toolbar>
-      </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
-      {loading ? (
-      <LinearProgress style={{ backgroundColor: "gold" }} />
-      ) : (
-      <GroupCards groups={groups} search={search} />)}
-    </Box>
+        
+        {renderMobileMenu}
+        {renderMenu}
+        {loading ? (
+        <LinearProgress style={{ backgroundColor: "gold" }} />
+        ) : (
+        <GroupCards groups={groups} search={search} />)}
+      </Box>
+    </Container>
   );
 } 
