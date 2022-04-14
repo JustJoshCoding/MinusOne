@@ -67,6 +67,7 @@ export default function CreateNewGroup() {
       });
       return;
       }
+      
       const groupData = {
           groupName: groupName, 
           password: password,

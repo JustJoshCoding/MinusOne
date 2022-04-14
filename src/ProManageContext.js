@@ -20,6 +20,8 @@ const ProManageContext = ({ children }) => {
   const [availIdeas, setAvailIdeas] = useState([]);
   const [groups, setGroups] = useState([]);
   const [groupInfo, setGroupInfo] = useState(null);
+  const [timeline, setTimeline] = useState([]);
+
   const [currentAccProps, setCurrentAccProps] = useState([]);
   const [pendingProposals, setPendingProposals] = useState([]);
   const [students, setStudents] = useState([]);
@@ -123,13 +125,33 @@ const ProManageContext = ({ children }) => {
         console.log("No Groups Available");
       }
     };
-    
+
     getAvailIdeas();
     getGroups();
     getCurrAccepted();
     getPendingProposals();
     getAllStudentAccounts();
   }, [])
+
+  useEffect(() => {
+    
+    const timelineRef = collection(db, "Timeline");
+
+    const getTimeline = async  () => {
+      const data = await getDocs(timelineRef);
+      if (data) {
+        setTimeline(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      }
+      else {
+        console.log("No Timeline Available");
+      }
+    };
+    
+  
+    
+    getTimeline();
+  }, [])
+  
  
   // setting the user state to the user that is currently logged in or null if no user
   useEffect(() => {
@@ -167,10 +189,13 @@ const ProManageContext = ({ children }) => {
         availIdeas,
         isAdmin,
         groupInfo,
+        timeline,
+
         loading,
         currentAccProps,
         pendingProposals,
         students
+
       }}
     >
       {children}
