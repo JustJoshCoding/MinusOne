@@ -14,7 +14,6 @@ import MyGroupPage from "./Pages/MyGroupPage";
 import ViewGroupPage from "./Pages/ViewGroupPage";
 import ViewProfilePage from "./Pages/ViewProfilePage";
 import TimelineAdd from "./Pages/TimelineAdd";
-import Dropzone from "./components/SubmissionBox2/Dropzone";
 import IdeaProposal from "./components/IdeaComponents/IdeaProposal";
 import SubmissionsPage from "./Pages/SubmissionsPage";
 import ViewProposal from "./components/Submission/ViewProposal";
@@ -87,7 +86,7 @@ function App() {
             element={<IdeaProposal/>}
           />
           <Route
-            path='/submission'
+            path='/inbox'
             element={<SubmissionsPage/>}
           />
           <Route

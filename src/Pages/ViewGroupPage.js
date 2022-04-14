@@ -65,8 +65,8 @@ export default function ViewGroupPage() {
                         <CardMedia
                             component="img"
                             height={500}
-                            alt="green iguana"
-                            image="https://cdn.memiah.co.uk/blog/wp-content/uploads/counselling-directory.org.uk/2019/04/shutterstock_1464234134-1024x684.jpg"
+                            alt={groupInfo?.groupName}
+                            image={groupInfo?.image}
                         />
                         <CardContent>
                             <Typography
@@ -321,6 +321,42 @@ export default function ViewGroupPage() {
                             >
                                 {`${groupInfo.Duration} weeks`}
                             </Typography>
+                            :
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                            >
+                            None
+                            </Typography>}
+                            <br/>
+                            <Typography
+                                variant='h4'
+                            >
+                                Trello Board Link:
+                            </Typography>
+                            <br/>
+                            {groupInfo?.trello !== undefined ? 
+                            <a href={groupInfo?.trello}>
+                                {groupInfo?.trello}
+                            </a>
+                            :
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                            >
+                            None
+                            </Typography>}
+                            <br/>
+                            <Typography
+                                variant='h4'
+                            >
+                                GitHub Link:
+                            </Typography>
+                            <br/>
+                            {groupInfo?.git !== undefined ? 
+                            <a href={groupInfo?.git}>
+                                {groupInfo?.git}
+                            </a>
                             :
                             <Typography
                                 variant='body1'

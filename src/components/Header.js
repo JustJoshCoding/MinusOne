@@ -46,7 +46,7 @@ function Header() {
 
   const classes = useStyles();
   const { user,isAdmin } = ProManageState();
-  const pages = ['Dashboard','Groups', 'Ideas', 'Submission','Students'];
+  const pages = ['Dashboard','Groups', 'Ideas', 'Submission','Students','Inbox'];
   
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -114,13 +114,15 @@ function Header() {
             <MenuItem onClick={handleCloseNavMenu}>
               <Typography textAlign="right" onClick={() => navigate(`/${pages[2]}`)}>{pages[2]}</Typography>
             </MenuItem>
-            {isAdmin && 
             <MenuItem onClick={handleCloseNavMenu}>
               <Typography textAlign="right" onClick={() => navigate(`/${pages[3]}`)}>{pages[3]}</Typography>
-            </MenuItem>}
+            </MenuItem>
             <MenuItem onClick={handleCloseNavMenu}>
               <Typography textAlign="right" onClick={() => navigate(`/${pages[4]}`)}>{pages[4]}</Typography>
             </MenuItem>
+            {isAdmin && <MenuItem onClick={handleCloseNavMenu}>
+              <Typography textAlign="right" onClick={() => navigate(`/${pages[5]}`)}>{pages[5]}</Typography>
+            </MenuItem>}
             </Menu>
           </Box>
           
@@ -144,18 +146,24 @@ function Header() {
                 >
                   {pages[2]}
                 </Button>
-                {isAdmin && <Button
+                 <Button
                   onClick={() => navigate(`/${pages[3]}`)}
                   sx={{ my: 2, color: "gold", fontFamily: "Montserrat", display: "block" }}
                 >
                   {pages[3]}
-                </Button>}
+                </Button>
                 <Button
                   onClick={() => navigate(`/${pages[4]}`)}
                   sx={{ my: 2, color: "gold", fontFamily: "Montserrat", display: "block" }}
                 >
                   {pages[4]}
                 </Button>
+                {isAdmin && <Button
+                  onClick={() => navigate(`/${pages[5]}`)}
+                  sx={{ my: 2, color: "gold", fontFamily: "Montserrat", display: "block" }}
+                >
+                  {pages[5]}
+                </Button>}
               
             </Box>
             {user ? <UserSidebar /> : <AuthModal />}

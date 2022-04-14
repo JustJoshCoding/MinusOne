@@ -22,6 +22,7 @@ export function SingleFileUploadWithProgress({
     }
 
     upload();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

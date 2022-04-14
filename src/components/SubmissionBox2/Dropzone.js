@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { storage, db } from '../../firebase';
 import { ref, getDownloadURL, uploadBytes } from '@firebase/storage';
@@ -18,7 +18,7 @@ const Dropzone = () => {
         timestamp:serverTimestamp()
       })
       await Promise.all(
-        selectedImages.map(image=>{
+        selectedImages.map((image)=>{
           const imageRef = ref(storage, `Timeline2/${docRef.id}/${image.path}`); 
           uploadBytes(imageRef, image, "data_url").then(async()=>{
             const downloadURL = await getDownloadURL(imageRef)

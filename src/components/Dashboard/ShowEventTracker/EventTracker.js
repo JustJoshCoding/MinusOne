@@ -24,29 +24,22 @@ const EventTracker = () => {
   const [showAddTask, setShowAddTask] = useState(false)
   const [tasks, setTasks] = useState([])
   const classes = useStyles();
-  const { setAlert } = ProManageState();
+  const { setAlert, userInfo } = ProManageState();
 
-  // useEffect(() => {
-  //   const getTasks = async () => {
-  //     const tasksFromServer = await fetchTasks()
-  //     setTasks(tasksFromServer)
-  //   }
 
-  //   getTasks()
-  // }, [])
+  const getTasks = async () => {
+    const eventsRef = collection(db, "Events");
+    const data = await getDocs(eventsRef);
+    if (data) {
+      setTasks(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    }
+    else {
+      console.log("No Events");
+    }
+  }
+
 
   useEffect(() => {
-    const getTasks = async () => {
-      const eventsRef = collection(db, "Events");
-      const data = await getDocs(eventsRef);
-      if (data) {
-        setTasks(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      }
-      else {
-        console.log("No Events");
-      }
-    }
-
     getTasks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -60,10 +53,10 @@ const EventTracker = () => {
 
   // Add Task
   const addTask = async (event) => {
-    console.log(event)
     await addDoc(collection(db, "Events"), 
       event
     );
+    getTasks();
     setTasks([...tasks, event]);
   }
 
@@ -109,7 +102,7 @@ const EventTracker = () => {
           showAdd={showAddTask}
         />
         <div>
-          {showAddTask && <AddEvent onAdd={addTask} />}
+          {showAddTask && userInfo?.isAdmin && <AddEvent onAdd={addTask} />}
           {tasks.length > 0 ? (
             <Tasks
               tasks={tasks}

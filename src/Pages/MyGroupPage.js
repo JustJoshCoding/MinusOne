@@ -11,9 +11,10 @@ import { Box } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import TextField from '@mui/material/TextField';
-import { Button, Container } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import { IconButton } from '@material-ui/core';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
@@ -29,6 +30,13 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import StarIcon from '@mui/icons-material/Star';
 import PersonIcon from '@mui/icons-material/Person';
+
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import { makeStyles } from "@material-ui/core";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+import AppBar from '@mui/material/AppBar';
 
 const style = {
   position: 'absolute',
@@ -49,16 +57,49 @@ const theme = createTheme({
     },
   });
 
+const Input = styled('input')({
+    display: 'none',
+});
+
+const useStyles = makeStyles((theme) => ({
+    modal: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    paper: {
+      width: 700,
+      height: 400,
+      backgroundColor: theme.palette.background.paper,
+      color: "white",
+      borderRadius: 8,
+    },
+    changeGroupPicture: {
+        padding: 6,
+        borderBottom: "2px solid grey",
+        borderTop: "2px solid grey"
+    },
+    section: {
+        padding: 6,
+        borderBottom: "2px solid grey",
+    }
+}));
+
 export default function MyGroupPage() {
-    const { userInfo, groupInfo, groups, setAlert } = ProManageState();
+    const { userInfo, groupInfo, groups, setAlert, user } = ProManageState();
     const [editMode, setEditMode] = useState(false);
     const [open, setOpen] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
+    const [fileUrl, setFileUrl] = useState(null);
+    const classes = useStyles();
 
     const [projectName, setProjectName] = useState("");
     const [duration, setDuration] = useState(-1);
     const [projectScope, setProjectScope] = useState("");
     const [description, setDescription] = useState("");
     const [type, setType] = useState("");
+    const [trello, setTrello] = useState("");
+    const [git, setGit] = useState("");
 
     const [deliverables, setDeliverables] = useState([
         {Deliverable: "" }
@@ -197,7 +238,7 @@ export default function MyGroupPage() {
             projectName: groups[mygroup].projectName = projectName,
         };
         
-        const groupRef = doc(db, "Groups", groupInfo.id);
+        const groupRef = doc(db, "Groups", groupInfo?.id);
         try {
             await updateDoc(groupRef, groupData)
             setAlert({
@@ -224,22 +265,182 @@ export default function MyGroupPage() {
         setEditMode(false);
     };
 
+    const handleSaveGroupInfo = async (e) => {
+        e.preventDefault();
+        const groupRef = doc(db,"Groups", groupInfo?.id)
+        if(trello === "" || git === ""){
+            if(trello!==""){
+                try {
+                    await 
+                        updateDoc(groupRef, {
+                            trello: trello
+                        })
+                    groupInfo.trello = trello;
+                    setAlert({
+                        open: true,
+                        message: 'Updated Group',
+                        type: "success",
+                    });
+                    
+                } catch (error) {
+                    setAlert({
+                        open: true,
+                        message: error.message,
+                        type: "error",
+                    });
+                }
+            }
+            if(git!==""){
+                try {
+                    await 
+                        updateDoc(groupRef, {
+                            git: git
+                        })
+                    groupInfo.git = git;
+                    setAlert({
+                        open: true,
+                        message: 'Updated Group',
+                        type: "success",
+                    });
+                    
+                } catch (error) {
+                    setAlert({
+                        open: true,
+                        message: error.message,
+                        type: "error",
+                    });
+                }
+            }
+        }
+        if(trello === "" && git === ""){
+            if(fileUrl !== null){
+                try {
+                    await 
+                        updateDoc(groupRef, {
+                            image: fileUrl
+                        })
+                    groupInfo.image = fileUrl.toString();
+                    setAlert({
+                        open: true,
+                        message: 'Updated Group',
+                        type: "success",
+                    });
+                    
+                } catch (error) {
+                    setAlert({
+                        open: true,
+                        message: error.message,
+                        type: "error",
+                    });
+                }
+            }
+            else setOpenModal(false)
+        }
+    }
+
+    const onFileChange = async (e) => {
+        const file = e.target.files[0];
+        const storage = getStorage();
+        const storageRef = ref(storage, `group-pictures/${groupInfo.groupName}`);
+        await uploadBytes(storageRef, file)
+        setFileUrl( await getDownloadURL(ref(storage, `group-pictures/${groupInfo.groupName}`)))
+    }
+
+    const renderEdit  = (
+        <Modal
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          className={classes.modal}
+          open={openModal}
+          onClose={()=> setOpenModal(false)}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={openModal}>
+            <div className={classes.paper}>
+              <AppBar
+                position="static"
+                style={{
+                  backgroundColor: "transparent",
+                  color: "black",
+                }}
+              >
+                <Container style={{ textAlign: "center"}} >
+                  <Typography fontSize={30} fontFamily='Montserrat'>Edit Group Information</Typography>
+                </Container>
+                </AppBar>
+                <Container style={{margin: 20, textAlign: "left"}}>
+                    <form onSubmit={handleSaveGroupInfo}>
+                        <div className={classes.changeGroupPicture} >
+                            <label htmlFor="contained-button-file">
+                                <Input 
+                                    onChange={onFileChange}
+                                    accept="image/*"
+                                    id="contained-button-file" 
+                                    multiple type="file" 
+                                />
+                                <Button variant="contained" component="span">
+                                    Change Group Picture
+                                </Button>
+                            </label>
+                        </div>
+                        <div className={classes.section}>
+                            <Button variant="contained" onClick={(e)=> setEditMode(true) }>
+                                Submit a Proposal
+                            </Button>
+                        </div>
+                        <div className={classes.section}>
+                            <TextField
+                                type='url'
+                                label='Trello Board Link'
+                                defaultValue={groupInfo?.trello}
+                                variant='outlined'
+                                value={trello}
+                                onChange={(e)=>setTrello(e.target.value)}
+                            />
+                        </div>
+                        <div className={classes.section}>
+                            <TextField
+                                type='url'
+                                defaultValue={groupInfo?.git}
+                                label='GitHub Link'
+                                variant='outlined'
+                                value={git}
+                                onChange={(e)=>setGit(e.target.value)}
+                            />
+                        </div>
+                        <div style={{marginTop: 40}}>
+                            <Button style={{float: "right", display: 'inlineBlock', marginRight: 50}} variant='contained' color='success' onClick={handleSaveGroupInfo}>
+                                Save Changes
+                            </Button>
+                        </div>
+                    </form>
+                </Container>
+            </div>
+          </Fade>
+        </Modal>
+    )
+
     return (
         <ThemeProvider theme={theme}>
              <Container style={{ textAlign: "left" }}>
+                {renderEdit}
                 {userInfo?.groupName !== "" ? <Box sx={{ m: 10}}>
                     {!editMode ? 
                     <Card>
                         <CardHeader
                             sx={{ bgcolor: 'primary.main', color: 'white'}}
                             title={<Typography variant='h4'>{groupInfo?.groupName}</Typography>}
-                            avatar = {<EditIcon style={{ cursor: "pointer"}} fontSize="large" onClick={() => setEditMode(true)}/>}
+                            avatar = {<EditIcon style={{ cursor: "pointer"}} fontSize="large" onClick={() => setOpenModal(true)}/>}
                         />
                         <CardMedia
                             component="img"
                             height={500}
-                            alt="green iguana"
-                            image="https://cdn.memiah.co.uk/blog/wp-content/uploads/counselling-directory.org.uk/2019/04/shutterstock_1464234134-1024x684.jpg"
+                            alt={groupInfo?.groupName}
+                            image={groupInfo?.image}
                         />
                         <CardContent>
                             <Typography
@@ -495,6 +696,42 @@ export default function MyGroupPage() {
                             >
                                 {`${groupInfo?.Duration} weeks`}
                             </Typography>
+                            :
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                            >
+                            None
+                            </Typography>}
+                            <br/>
+                            <Typography
+                                variant='h4'
+                            >
+                                Trello Board Link:
+                            </Typography>
+                            <br/>
+                            {groupInfo?.trello !== undefined ? 
+                            <a href={groupInfo?.trello}>
+                                {groupInfo?.trello}
+                            </a>
+                            :
+                            <Typography
+                                variant='body1'
+                                sx={{marginLeft: 10}}
+                            >
+                            None
+                            </Typography>}
+                            <br/>
+                            <Typography
+                                variant='h4'
+                            >
+                                GitHub Link:
+                            </Typography>
+                            <br/>
+                            {groupInfo?.git !== undefined ? 
+                            <a href={groupInfo?.git}>
+                                {groupInfo?.git}
+                            </a>
                             :
                             <Typography
                                 variant='body1'

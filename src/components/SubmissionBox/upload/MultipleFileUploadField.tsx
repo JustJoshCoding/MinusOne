@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function MultipleFileUploadField({ name }: { name: string }) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, __, helpers] = useField(name);
   const classes = useStyles();
 
@@ -49,7 +50,7 @@ export function MultipleFileUploadField({ name }: { name: string }) {
 
   useEffect(() => {
     helpers.setValue(files);
-    // helpers.setTouched(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files]);
 
   function onUpload(file: File, url: string) {

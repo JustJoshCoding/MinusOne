@@ -4,19 +4,21 @@ const AddTask = ({ onAdd }) => {
   const [text, setText] = useState('')
   const [day, setDay] = useState('')
   const [reminder, setReminder] = useState(false)
+  const [link, setLink] = useState('');
 
   const onSubmit = (e) => {
     e.preventDefault()
 
     if (!text) {
-      alert('Please add a task')
+      alert('Please add an Announcement')
       return
     }
 
-    onAdd({ text, day, reminder })
+    onAdd({ text, day, link, reminder })
 
     setText('')
     setDay('')
+    setLink('')
     setReminder(false)
   }
 
@@ -26,7 +28,7 @@ const AddTask = ({ onAdd }) => {
         <label>Task</label>
         <input
           type='text'
-          placeholder='Add Task'
+          placeholder='Add Announcement'
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
@@ -40,6 +42,15 @@ const AddTask = ({ onAdd }) => {
           onChange={(e) => setDay(e.target.value)}
         />
       </div>
+      <div className='form-control'>
+        <label>Link</label>
+        <input
+          type='url'
+          placeholder='Add url'
+          value={link}
+          onChange={(e) => setLink(e.target.value)}
+        />
+      </div>
       <div className='form-control form-control-check'>
         <label>Set Reminder</label>
         <input
@@ -50,7 +61,7 @@ const AddTask = ({ onAdd }) => {
         />
       </div>
 
-      <input type='submit' value='Save Task' className='btn btn-block' />
+      <input type='submit' value='Post' className='btn btn-block' />
     </form>
   )
 }
