@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function MyGroupPage() {
-    const { userInfo, groupInfo, groups, setAlert, user } = ProManageState();
+    const { userInfo, groupInfo, groups, setAlert } = ProManageState();
     const [editMode, setEditMode] = useState(false);
     const [open, setOpen] = useState(false);
     const [openModal, setOpenModal] = useState(false);

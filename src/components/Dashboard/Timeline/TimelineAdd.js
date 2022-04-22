@@ -3,14 +3,13 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import { Box, Container, TextField } from '@material-ui/core';
+import { Container, TextField } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { db } from '../../../firebase';
 import { addDoc, collection} from "firebase/firestore";
 import { ProManageState } from '../../../ProManageContext';
 import { useNavigate } from "react-router-dom";
-import { storage } from '../../../firebase';
 import "firebase/storage";
 
 
@@ -23,51 +22,10 @@ const theme = createTheme({
 });
 
 export default function TimelineAdd() {
-    const navigate = useNavigate();
-    const { setAlert, timeline } = ProManageState();
-    const [title, setTimelineTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [selectedImages, setSelectedImages] = useState([])
-    const [file, setFile] = useState(null)
-
-    const onFileChange = (e) =>{
-        setFile(e.target.files[0])
-    }
-
-    const [images, setImages] = useState([]);
-    const [urls, setUrls] = useState([]);
-    const [progress, setProgress] = useState(0);
-    
-    const handleChange = e => {
-      if (e.target.files[0]) {
-        setImages(e.target.files[0]);
-      }
-    };
-
-    const handleUpload = () => {
-      const uploadTask = storage.ref(`Timeline/${images.name}`).put(images);
-      uploadTask.on(
-        "state_changed",
-        snapshot => {
-          const progress = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          );
-          setProgress(progress);
-        },
-        error => {
-          console.log(error);
-        },
-        () => {
-          storage
-            .ref("Timeline")
-            .child(images.name)
-            .getDownloadURL()
-            .then(url => {
-              setUrls(url);
-            });
-        }
-      );
-    };
+  const navigate = useNavigate();
+  const { setAlert, timeline } = ProManageState();
+  const [title, setTimelineTitle] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleSubmit = async (e) => {
       e.preventDefault();
@@ -82,8 +40,7 @@ export default function TimelineAdd() {
       const timelineData = {
         title: title, 
         description: description,
-        dateCreated: new Date().toLocaleString(),
-        selectedImages: selectedImages
+        dateCreated: new Date().toLocaleString()
       } 
       const timelineRef = collection(db, "Timeline" );
       try {

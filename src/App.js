@@ -13,7 +13,7 @@ import Submission from "./components/Submission/Submission.tsx";
 import MyGroupPage from "./Pages/MyGroupPage";
 import ViewGroupPage from "./Pages/ViewGroupPage";
 import ViewProfilePage from "./Pages/ViewProfilePage";
-import TimelineAdd from "./components/Dashboard/Timeline.js/TimelineAdd";
+import TimelineAdd from "./components/Dashboard/Timeline/TimelineAdd";
 import IdeaProposal from "./components/IdeaComponents/IdeaProposal";
 import Inbox from "./Pages/InboxPage";
 import ViewProposal from "./components/Inbox/ViewProposal";
