@@ -16,8 +16,7 @@ export default function Home() {
               })
             ),
           })}
-          onSubmit={(values) => {
-            console.log('values', values);
+          onSubmit={() => {
             return new Promise((res) => setTimeout(res, 2000));
           }}
         >

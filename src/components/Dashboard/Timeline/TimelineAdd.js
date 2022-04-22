@@ -42,6 +42,7 @@ export default function TimelineAdd() {
         description: description,
         dateCreated: new Date().toLocaleString()
       } 
+      //update group timeline
       const timelineRef = collection(db, "Timeline" );
       try {
         await Promise.all([ addDoc(timelineRef, timelineData)]);
