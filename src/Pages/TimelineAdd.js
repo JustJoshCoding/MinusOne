@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -7,18 +7,9 @@ import { Box, TextField } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { db } from '../firebase';
-import { addDoc, collection, updateDoc, doc } from "firebase/firestore";
-import Submission from './Submission.tsx';
+import { addDoc, collection } from "firebase/firestore";
 import { ProManageState } from '../ProManageContext';
 import { useNavigate } from "react-router-dom";
-import Dropzone from 'react-dropzone';
-import { getDownloadURL, uploadBytes, ref  } from 'firebase/storage';
-import { storage } from '../firebase';
-import { useDropzone } from 'react-dropzone';
-import { async } from '@firebase/util';
-import firebaseConfig from '../config/firebaseConfig';
-import "firebase/storage";
-
 
 
 const theme = createTheme({
@@ -28,8 +19,6 @@ const theme = createTheme({
     },
   });
 
-  
-  
 
 export default function TimelineAdd() {
 
@@ -38,60 +27,6 @@ export default function TimelineAdd() {
     const { setAlert, timeline } = ProManageState();
     const [title, setTimelineTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [selectedImages, setSelectedImages] = useState([])
-
-    const [file, setFile] = useState(null)
-
-    const onFileChange = (e) =>{
-        setFile(e.target.files[0])
-    }
-
-    // const onUpload = async() => {
-    //     const storageRef = storage.ref()
-    //     const fileRef = storageRef.child(file.name)
-    //     await fileRef.put(file)
-
-    //     db.collection("Timeline").doc(timeline)
-    // }
-
-
-    const [images, setImages] = useState([]);
-    const [urls, setUrls] = useState([]);
-    const [progress, setProgress] = useState(0);
-    
-    const handleChange = e => {
-        if (e.target.files[0]) {
-          setImages(e.target.files[0]);
-        }
-      };
-
-      const handleUpload = () => {
-        const uploadTask = storage.ref(`Timeline/${images.name}`).put(images);
-        uploadTask.on(
-          "state_changed",
-          snapshot => {
-            const progress = Math.round(
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            );
-            setProgress(progress);
-          },
-          error => {
-            console.log(error);
-          },
-          () => {
-            storage
-              .ref("Timeline")
-              .child(images.name)
-              .getDownloadURL()
-              .then(url => {
-                setUrls(url);
-              });
-          }
-        );
-      };
-
-
-    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -108,8 +43,8 @@ export default function TimelineAdd() {
             title: title, 
             description: description,
             dateCreated: new Date().toLocaleString(),
-            selectedImages: selectedImages
         } 
+
         const timelineRef = collection(db, "Timeline" );
 
             try {
@@ -130,13 +65,6 @@ export default function TimelineAdd() {
             }
             navigate('/dashboard');
         }
-
-   
-
-        
-
-        
-
 
 
   return (
@@ -169,10 +97,6 @@ export default function TimelineAdd() {
                             rows={10}
                         />
 
-
-
-                        {/* <input type='file' onChange={handleChange}/>
-                        <button onClick = {handleUpload}>Upload File</button> */}
                     </CardContent>
                     <CardActions>
                         <Button 
