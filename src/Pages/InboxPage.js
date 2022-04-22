@@ -15,7 +15,7 @@ import {
   ThemeProvider,
   createTheme
 } from "@material-ui/core";
-import SubmissionTable from '../components/Submission/SubmissionTable';
+import SubmissionTable from '../components/Inbox/SubmissionTable';
 
 const drawerWidth = 240;
 

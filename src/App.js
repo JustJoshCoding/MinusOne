@@ -9,14 +9,14 @@ import IdeaPage from "./Pages/IdeaPage";
 import ProfilePage from "./Pages/ProfilePage";
 import Registration from "./components/Authentication/Registration";
 import Dashboard from "./Pages/Dashboard";
-import Submission from "./Pages/Submission.tsx";
+import Submission from "./components/Submission/Submission.tsx";
 import MyGroupPage from "./Pages/MyGroupPage";
 import ViewGroupPage from "./Pages/ViewGroupPage";
 import ViewProfilePage from "./Pages/ViewProfilePage";
-import TimelineAdd from "./Pages/TimelineAdd";
+import TimelineAdd from "./components/Dashboard/Timeline.js/TimelineAdd";
 import IdeaProposal from "./components/IdeaComponents/IdeaProposal";
-import SubmissionsPage from "./Pages/SubmissionsPage";
-import ViewProposal from "./components/Submission/ViewProposal";
+import Inbox from "./Pages/InboxPage";
+import ViewProposal from "./components/Inbox/ViewProposal";
 import StudentsPage from "./Pages/StudentsPage";
 
 
@@ -87,7 +87,7 @@ function App() {
           />
           <Route
             path='/inbox'
-            element={<SubmissionsPage/>}
+            element={<Inbox/>}
           />
           <Route
             path='/studentproposal/:id'

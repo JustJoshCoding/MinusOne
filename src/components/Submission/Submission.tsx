@@ -1,8 +1,7 @@
 import { Button, Card, CardContent, Grid } from '@material-ui/core';
 import { Form, Formik } from 'formik';
-import React from 'react';
 import { array, object, string } from 'yup';
-import { MultipleFileUploadField } from '../components/SubmissionBox/upload/MultipleFileUploadField';
+import { MultipleFileUploadField } from '../SubmissionBox/upload/MultipleFileUploadField';
 
 export default function Home() {
   return (
@@ -22,7 +21,7 @@ export default function Home() {
             return new Promise((res) => setTimeout(res, 2000));
           }}
         >
-          {({ values, errors, isValid, isSubmitting }) => (
+          {({ isValid, isSubmitting }) => (
             <Form>
               <Grid container spacing={2} direction="column">
                 <MultipleFileUploadField name="files" />

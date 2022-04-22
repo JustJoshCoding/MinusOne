@@ -8,7 +8,7 @@ import { CardHeader, Modal } from '@mui/material';
 import { ProManageState } from '../../ProManageContext';
 import { Box } from '@mui/system';
 import TextField from '@mui/material/TextField';
-import { Button } from '@material-ui/core';
+import { Button, Container } from '@material-ui/core';
 import { IconButton } from '@material-ui/core';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
@@ -207,7 +207,7 @@ export default function IdeaProposal() {
                     fullname: userInfo.firstname + " " + userInfo.lastname, 
                     received: new Date().toLocaleString(),
                     idea: "Student-Proposed" 
-                 })
+                 }) 
             ]);
             userInfo.status.push("Pending Proposal");
             setAlert({
@@ -227,7 +227,7 @@ export default function IdeaProposal() {
 
     return (
         <ThemeProvider theme={theme}>
-          <Box sx={{ m: 10}}>
+          <Container style={{ textAlign: "left" }}>
               <Card>
                   <CardHeader
                       sx={{ bgcolor: 'primary.main', color: 'white'}}
@@ -467,7 +467,7 @@ export default function IdeaProposal() {
                   </Button>
                   </Box>
               </Modal>
-          </Box>
+          </Container>
         </ThemeProvider>
     );
 }
